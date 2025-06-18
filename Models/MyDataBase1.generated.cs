@@ -365,6 +365,34 @@ namespace DataModels
 
 		#endregion
 
+		#region SpFiltrarCobrosEmpleado
+
+		public static IEnumerable<SpFiltrarCobrosEmpleadoResult> SpFiltrarCobrosEmpleado(this PviProyectoFinalDB dataConnection, string @nombreCliente, int? @mes, int? @anno)
+		{
+			var parameters = new []
+			{
+				new DataParameter("@nombre_cliente", @nombreCliente, LinqToDB.DataType.NVarChar)
+				{
+					Size = 100
+				},
+				new DataParameter("@mes",            @mes,           LinqToDB.DataType.Int32),
+				new DataParameter("@anno",           @anno,          LinqToDB.DataType.Int32)
+			};
+
+			return dataConnection.QueryProc<SpFiltrarCobrosEmpleadoResult>("[dbo].[SpFiltrarCobrosEmpleado]", parameters);
+		}
+
+		public partial class SpFiltrarCobrosEmpleadoResult
+		{
+			[Column("id_cobro")      ] public int    Id_cobro       { get; set; }
+			[Column("nombre_casa")   ] public string Nombre_casa    { get; set; }
+			[Column("nombre_cliente")] public string Nombre_cliente { get; set; }
+			[Column("periodo")       ] public string Periodo        { get; set; }
+			[Column("estado")        ] public string Estado         { get; set; }
+		}
+
+		#endregion
+
 		#region SpHelpdiagramdefinition
 
 		public static IEnumerable<SpHelpdiagramdefinitionResult> SpHelpdiagramdefinition(this PviProyectoFinalDB dataConnection, string @diagramname, int? @ownerId)

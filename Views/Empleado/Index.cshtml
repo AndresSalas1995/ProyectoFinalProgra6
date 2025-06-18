@@ -4,7 +4,23 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Consultar Cobro Empleado</h2>
+<h2>Gestionar Cobros</h2>
+
+<form method="get" class="row g-3 mb-4">
+    <div class="col-md-4">
+        <input type="text" name="nombreCliente" class="form-control" placeholder="Nombre del Cliente" value="@Request["nombreCliente"]" />
+    </div>
+    <div class="col-md-2">
+        <input type="number" name="mes" class="form-control" placeholder="Mes" min="1" max="12" value="@Request["mes"]" />
+    </div>
+    <div class="col-md-2">
+        <input type="number" name="anno" class="form-control" placeholder="Año" value="@Request["anno"]" />
+    </div>
+    <div class="col-md-2">
+        <button type="submit" class="btn btn-primary">Filtrar</button>
+    </div>
+</form>
+
 
 <table class="table table-bordered table-striped">
     <thead>

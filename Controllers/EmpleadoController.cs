@@ -12,17 +12,28 @@ namespace ProyectoFinalPogragamacionVI.Controllers
     [ValidarSession]
     public class EmpleadoController : Controller
     {
-        // GET: Empelado
-        public ActionResult Index()
+        // GET: Empleado
+        //Carga mi lista en consultar cobro empleado
+        public ActionResult Index(string nombreCliente, int? mes, int ? anno)
         {
             List<SpConsultarCobroResult> lista;
+
             using (var db = new PviProyectoFinalDB("MyDatabase"))
             {
-                lista = db.SpConsultarCobro().ToList();
+                //Si no hay filtros uso el sp sin filtros
+                if (string.IsNullOrEmpty(nombreCliente) && mes == null && anno == null)
+                {
+                    lista = db.SpConsultarCobro().ToList();
+                }
+                //Si hay filtro debo usar el sp con filtros
+                else
+                {
+                    lista = db.SpFiltrarCobrosEmpleado(nombreCliente, mes, anno
+                    ).ToList();
+                }
             }
             return View(lista);
         }
-
 
     }
 }
