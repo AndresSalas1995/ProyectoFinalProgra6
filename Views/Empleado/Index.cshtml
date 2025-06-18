@@ -1,0 +1,31 @@
+﻿@model List<DataModels.PviProyectoFinalDBStoredProcedures.SpConsultarCobroResult>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Consultar Cobro Empleado</h2>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th># Cobro</th>
+            <th>Nombre de Casa</th>
+            <th>Propietario</th>
+            <th>Periodo</th>
+            <th>Estado</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (DataModels.PviProyectoFinalDBStoredProcedures.SpConsultarCobroResult item in this.Model)
+        {
+            <tr>
+                <td>@item.Id_cobro</td>
+                <td>@item.Nombre_casa</td>
+                <td>@item.Nombre_cliente</td>
+                <td>@item.Periodo</td>
+                <td>@item.Estado</td>
+            </tr>
+        }
+    </tbody>
+</table>
