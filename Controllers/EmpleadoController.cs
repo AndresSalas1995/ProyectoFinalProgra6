@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using DataModels;
+using ProyectoFinalPogragamacionVI.Models;
 using ProyectoFinalPogragamacionVI.Permisos;
 using static DataModels.PviProyectoFinalDBStoredProcedures;
 
@@ -28,8 +29,12 @@ namespace ProyectoFinalPogragamacionVI.Controllers
                 //Si hay filtro debo usar el sp con filtros
                 else
                 {
-                    lista = db.SpFiltrarCobrosEmpleado(nombreCliente, mes, anno
-                    ).ToList();
+                    ConsultarCobro consultarcobro = new ConsultarCobro();
+                    lista = db.SpFiltrarCobrosEmpleado(nombreCliente, mes, anno).Select(_ => new ConsultarCobro{
+                        nombreCliente = nombreCliente,
+                        mes = mes.ToString(),
+                        anno = anno.ToString()
+                    }).FirstOrDefault();
                 }
             }
             return View(lista);
