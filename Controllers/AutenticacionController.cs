@@ -28,6 +28,15 @@ namespace ProyectoFinalPogragamacionVI.Controllers
                     Session["nombre_completo"] = resultado.Nombre_completo;
                     Session["es_empleado"] = resultado.Es_empleado;
 
+                    //if (Session["es_empleado"] == true) 
+                    //{
+                    //    return RedirectToAction("Index", "Empleado");
+                    //}
+                    //else
+                    //{
+                    //    return RedirectToAction("Index", "Usuario");
+                    //}
+
                     return RedirectToAction("Index", "Empleado");
                 }
                 else 
