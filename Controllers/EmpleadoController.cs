@@ -29,12 +29,7 @@ namespace ProyectoFinalPogragamacionVI.Controllers
                 //Si hay filtro debo usar el sp con filtros
                 else
                 {
-                    ConsultarCobro consultarcobro = new ConsultarCobro();
-                    lista = db.SpFiltrarCobrosEmpleado(nombreCliente, mes, anno).Select(_ => new ConsultarCobro{
-                        nombreCliente = nombreCliente,
-                        mes = mes.ToString(),
-                        anno = anno.ToString()
-                    }).FirstOrDefault();
+                    lista = db.SpFiltrarCobrosEmpleado(nombreCliente, mes, anno).ToList();
                 }
             }
             return View(lista);
