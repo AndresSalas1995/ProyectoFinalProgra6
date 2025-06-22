@@ -1,0 +1,37 @@
+﻿@model List<DataModels.PviProyectoFinalDBStoredProcedures.SpConsultarCobrosUsuarioResult>
+
+
+@{
+    ViewBag.Title = "Mis Cobros";
+}
+
+<h2>Mis Cobros</h2>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th># Cobro</th>
+            <th>Casa</th>
+            <th>Mes</th>
+            <th>Año</th>
+            <th>Estado</th>
+            <th>Monto</th>
+            <th>Fecha de Pago</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (DataModels.PviProyectoFinalDBStoredProcedures.SpConsultarCobrosUsuarioResult item in this.Model)
+        {
+            <tr>
+                <td>@item.Id_cobro</td>
+                <td>@item.Nombre_casa</td>
+                <td>@item.Mes</td>
+                <td>@item.Anno</td>
+                <td>@item.Estado</td>
+                <td>@item.Monto.ToString("C")</td>
+                <td>@item.Fecha_pagada?.ToString("dd/MM/yyyy")</td>
+            </tr>
+        }
+    </tbody>
+</table>
+

@@ -17,14 +17,14 @@ namespace ProyectoFinalPogragamacionVI.Controllers
         public ActionResult Index()
         {
             int idPersona = (int)Session["id_persona"];
-            List<SpConsultarReservacionesUsuarioResult> reservaciones;
+            List<SpConsultarCobrosUsuarioResult> lista;
 
             using (var db = new PviProyectoFinalDB("MyDatabase"))
             {
-                reservaciones = db.SpConsultarReservacionesUsuario(idPersona).ToList();
+                lista = db.SpConsultarCobrosUsuario(idPersona).ToList();
             }
 
-            return View(reservaciones);
+            return View(lista);
 
         }
     }
