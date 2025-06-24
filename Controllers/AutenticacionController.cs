@@ -20,12 +20,12 @@ namespace ProyectoFinalPogragamacionVI.Controllers
         {
             using (var db = new PviProyectoFinalDB("MyDatabase"))
             {
-                var resultado = db.SpLoginUsuario(Email, Contrasena).Select(r => new SpLoginUsuario_Result
+                var resultado = db.SpLoginUsuario(Email, Contrasena).Select(_ => new SpLoginUsuario_Result
                 {
-                    LoginExitoso = r.Login_exitoso,
-                    id_persona = r.Id_persona,
-                    nombre_completo = r.Nombre_completo,
-                    es_empleado = r.Es_empleado
+                    LoginExitoso = _.Login_exitoso,
+                    id_persona = _.Id_persona,
+                    nombre_completo = _.Nombre_completo,
+                    es_empleado = _.Es_empleado
                 }).FirstOrDefault();
 
                 if (resultado != null && resultado.LoginExitoso == 1) 
