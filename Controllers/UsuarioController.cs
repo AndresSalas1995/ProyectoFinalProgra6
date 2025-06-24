@@ -10,9 +10,9 @@ using static DataModels.PviProyectoFinalDBStoredProcedures;
 
 namespace ProyectoFinalPogragamacionVI.Controllers
 {
+    [ValidarSession]
     public class UsuarioController : Controller
     {
-        [ValidarSession]
         // GET: Usuario
         public ActionResult Index()
         {
