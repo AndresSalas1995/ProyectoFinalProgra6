@@ -9,10 +9,12 @@ namespace ProyectoFinalPogragamacionVI.Models
     {
         public int id_cobro { get; set; }
         public string nombre_casa { get; set; }
-        public int mes { get; set; }
-        public int anno { get; set; }
+        public string nombre_cliente { get; set; }
+        public string nombreCliente { get; set; }
+        public string periodo { get; set; }
+        public string mes { get; set; }
+        public string anno { get; set; }
         public string estado { get; set; }
-        public decimal monto { get; set; }
-        public DateTime? fecha_pagada { get; set; }
+
     }
 }

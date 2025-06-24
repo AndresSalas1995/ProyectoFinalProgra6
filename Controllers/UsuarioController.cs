@@ -16,9 +16,9 @@ namespace ProyectoFinalPogragamacionVI.Controllers
         // GET: Usuario
         public ActionResult Index()
         {
-            int idPersona = (int)Session["id_persona"];
             List<SpConsultarCobrosUsuarioResult> lista;
-
+            int idPersona = (int)Session["id_persona"];
+            
             using (var db = new PviProyectoFinalDB("MyDatabase"))
             {
                 lista = db.SpConsultarCobrosUsuario(idPersona).ToList();

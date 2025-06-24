@@ -338,13 +338,11 @@ namespace DataModels
 
 		public partial class SpConsultarCobrosUsuarioResult
 		{
-			[Column("id_cobro")    ] public int       Id_cobro     { get; set; }
-			[Column("nombre_casa") ] public string    Nombre_casa  { get; set; }
-			[Column("mes")         ] public int       Mes          { get; set; }
-			[Column("anno")        ] public int       Anno         { get; set; }
-			[Column("estado")      ] public string    Estado       { get; set; }
-			[Column("monto")       ] public decimal   Monto        { get; set; }
-			[Column("fecha_pagada")] public DateTime? Fecha_pagada { get; set; }
+			[Column("id_cobro")      ] public int    Id_cobro       { get; set; }
+			[Column("nombre_casa")   ] public string Nombre_casa    { get; set; }
+			[Column("nombre_cliente")] public string Nombre_cliente { get; set; }
+			[Column("periodo")       ] public string Periodo        { get; set; }
+			[Column("estado")        ] public string Estado         { get; set; }
 		}
 
 		#endregion
