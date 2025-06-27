@@ -17,7 +17,7 @@ namespace ProyectoFinalPogragamacionVI.Controllers
         //Carga mi lista en consultar cobro empleado
         public ActionResult Index(string nombreCliente, int? mes, int ? anno)
         {
-            List<SpConsultarCobroResult> lista;
+            List<SpConsultarCobroResult> lista = new List<SpConsultarCobroResult>();
 
             using (var db = new PviProyectoFinalDB("MyDatabase"))
             {
@@ -27,10 +27,10 @@ namespace ProyectoFinalPogragamacionVI.Controllers
                     lista = db.SpConsultarCobro().ToList();
                 }
                 //Si hay filtro debo usar el sp con filtros
-                else
-                {
-                    lista = db.SpFiltrarCobrosEmpleado(nombreCliente, mes, anno).ToList();
-                }
+                //else
+                //{
+                //    lista = db.SpFiltrarCobrosEmpleado(nombreCliente, mes, anno).ToList();
+                //}
             }
             return View(lista);
         }
