@@ -17,11 +17,23 @@
             </button>
             <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
                 <ul class="navbar-nav flex-grow-1">
-                    <li>@Html.ActionLink("Consultar Cobros", "Index", "Empleado", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("Mis Cobros", "Index", "Usuario", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("Cerrar Sesion", "CerrarSession", "Autenticacion", new { area = "" }, new { @class = "nav-link" })</li>
+                    @if (Session["es_empleado"] != null && (int)Session["es_empleado"] == 1)
+                    {
+                        <li>@Html.ActionLink("Consultar Cobros", "Index", "Empleado", null, new { @class = "nav-link" })</li>
+                    }
 
+                    @if (Session["id_persona"] != null)
+                    {
+                        <li>@Html.ActionLink("Mis Cobros", "Index", "Usuario", null, new { @class = "nav-link" })</li>
+                        <li>@Html.ActionLink("Cerrar Sesión", "CerrarSession", "Autenticacion", null, new { @class = "nav-link" })</li>
+                    }
                 </ul>
+                <div class="text-white text-end">
+                    @if (Session["nombre_completo"] != null)
+                    {
+                        <span>Bienvenido/a, @Session["nombre_completo"]</span>
+                    }
+                </div>
             </div>
         </div>
     </nav>

@@ -21,19 +21,33 @@ namespace ProyectoFinalPogragamacionVI.Controllers
 
             using (var db = new PviProyectoFinalDB("MyDatabase"))
             {
+                if (string.IsNullOrWhiteSpace(nombreCliente))
+                {
+                    nombreCliente = null;
+                }
+
                 //Si no hay filtros uso el sp sin filtros
                 if (string.IsNullOrEmpty(nombreCliente) && mes == null && anno == null)
                 {
                     lista = db.SpConsultarCobro().ToList();
                 }
                 //Si hay filtro debo usar el sp con filtros
-                //else
-                //{
-                //    lista = db.SpFiltrarCobrosEmpleado(nombreCliente, mes, anno).ToList();
-                //}
+                else 
+                {
+                    //Mapeo manual si el SP con filtros devuelve un resultado diferente
+                    var resultado = db.SpFiltrarCobrosEmpleado(nombreCliente, mes, anno).ToList();
+
+                    lista = resultado.Select(r => new SpConsultarCobroResult
+                    {
+                        Id_cobro = r.Id_cobro,
+                        Nombre_casa = r.Nombre_casa,
+                        Nombre_cliente = r.Nombre_cliente,
+                        Periodo = r.Periodo,
+                        Estado = r.Estado
+                    }).ToList();
+                } 
             }
             return View(lista);
         }
-
     }
 }
