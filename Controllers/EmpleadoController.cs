@@ -11,6 +11,7 @@ using static DataModels.PviProyectoFinalDBStoredProcedures;
 namespace ProyectoFinalPogragamacionVI.Controllers
 {
     [ValidarSession]
+    [AutorizarEmpleado]
     public class EmpleadoController : Controller
     {
         // GET: Empleado

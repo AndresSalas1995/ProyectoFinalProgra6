@@ -271,6 +271,7 @@
       <DependentUpon>MyDataBase.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\SpLoginUsuario_Result.cs" />
+    <Compile Include="Permisos\AutorizarEmpleadoAttribute.cs" />
     <Compile Include="Permisos\ValidarSessionAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
