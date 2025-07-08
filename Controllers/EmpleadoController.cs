@@ -36,6 +36,7 @@ namespace ProyectoFinalPogragamacionVI.Controllers
                 else 
                 {
                     //Mapeo manual si el SP con filtros devuelve un resultado diferente
+                    //Nos aseguramos que se devulven los campos necesarios
                     var resultado = db.SpFiltrarCobrosEmpleado(nombreCliente, mes, anno).ToList();
 
                     lista = resultado.Select(r => new SpConsultarCobroResult
