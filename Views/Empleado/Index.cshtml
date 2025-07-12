@@ -39,6 +39,7 @@
             <th>Propietario</th>
             <th>Periodo</th>
             <th>Estado</th>
+            <th>Consultar</th>
         </tr>
     </thead>
     <tbody>
@@ -50,6 +51,9 @@
                 <td>@item.Nombre_cliente</td>
                 <td>@item.Periodo</td>
                 <td>@item.Estado</td>
+                <td>
+                    @Html.ActionLink("Consultar", "Detalle", "Cobros", new { id = item.Id_cobro }, new { @class = "btn btn-info btn-sm" })
+                </td>
             </tr>
         }
     </tbody>

@@ -10,23 +10,25 @@ using static DataModels.PviProyectoFinalDBStoredProcedures;
 
 namespace ProyectoFinalPogragamacionVI.Controllers
 {
-    [ValidarSession]
-    public class UsuarioController : Controller
+    public class CobrosController : Controller
     {
-        // GET: Usuario
+        // GET: Cobros
         public ActionResult Index()
         {
-            List<SpConsultarCobrosUsuarioResult> lista;
-            int idPersona = (int)Session["id_persona"];
-            
+            return View();
+        }
+
+        public ActionResult Detalle(int id)
+        {
             using (var db = new PviProyectoFinalDB("MyDatabase"))
             {
-                lista = db.SpConsultarCobrosUsuario(idPersona).ToList();
+                var resultado = db.SpConsultarDetalleCobro(id).ToList();
+
+               
             }
-
-            return View(lista);
-
+            return View();
         }
+
 
     }
 }

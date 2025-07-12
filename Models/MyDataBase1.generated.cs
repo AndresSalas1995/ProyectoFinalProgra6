@@ -347,6 +347,33 @@ namespace DataModels
 
 		#endregion
 
+		#region SpConsultarDetalleCobro
+
+		public static IEnumerable<SpConsultarDetalleCobroResult> SpConsultarDetalleCobro(this PviProyectoFinalDB dataConnection, int? @IdCobro)
+		{
+			var parameters = new []
+			{
+				new DataParameter("@IdCobro", @IdCobro, LinqToDB.DataType.Int32)
+			};
+
+			return dataConnection.QueryProc<SpConsultarDetalleCobroResult>("[dbo].[SpConsultarDetalleCobro]", parameters);
+		}
+
+		public partial class SpConsultarDetalleCobroResult
+		{
+			[Column("id_cobro")         ] public int       Id_cobro          { get; set; }
+			[Column("nombre_casa")      ] public string    Nombre_casa       { get; set; }
+			[Column("id_persona")       ] public int       Id_persona        { get; set; }
+			[Column("nombre_cliente")   ] public string    Nombre_cliente    { get; set; }
+			[Column("mes")              ] public int       Mes               { get; set; }
+			[Column("año")              ] public int       Año               { get; set; }
+			[Column("estado")           ] public string    Estado            { get; set; }
+			[Column("fecha_cancelacion")] public DateTime? Fecha_cancelacion { get; set; }
+			[Column("monto")            ] public decimal   Monto             { get; set; }
+		}
+
+		#endregion
+
 		#region SpCreatediagram
 
 		public static int SpCreatediagram(this PviProyectoFinalDB dataConnection, string @diagramname, int? @ownerId, int? @version, byte[] @definition)

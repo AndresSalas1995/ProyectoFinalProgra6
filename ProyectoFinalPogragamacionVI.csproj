@@ -257,6 +257,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AutenticacionController.cs" />
+    <Compile Include="Controllers\CobrosController.cs" />
     <Compile Include="Controllers\Dropdown.cs" />
     <Compile Include="Controllers\EmpleadoController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -266,6 +267,7 @@
     </Compile>
     <Compile Include="Models\ConsultarCobro.cs" />
     <Compile Include="Models\ConsultarCobroUsuario.cs" />
+    <Compile Include="Models\DetalleCobro.cs" />
     <Compile Include="Models\MyDataBase1.generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
