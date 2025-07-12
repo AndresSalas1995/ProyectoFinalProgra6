@@ -9,8 +9,11 @@
 @*Filtro para empleados*@
 
 <form method="get" class="row g-3 mb-4">
-    <div class="col-md-4">
-        <input type="text" name="nombreCliente" class="form-control" placeholder="Nombre del Cliente" value="@Request["nombreCliente"]" />
+    <div class="mb-3">
+        <label for="IdCliente" class="form-label"></label>
+        <select id="IdCliente" name="IdCliente" class="form-control">
+            <option value="">Seleccione un cliente</option>
+        </select>
     </div>
     <div class="col-md-2">
         <input type="number" name="mes" class="form-control" placeholder="Mes" min="1" max="12" value="@Request["mes"]" />
@@ -23,6 +26,10 @@
     </div>
 </form>
 
+@*Boton de agregar un nuevo cobro*@
+<div class="mb-3 text-end">
+    @Html.ActionLink("Nuevo Cobro", "Crear", "Empleado", null, new { @class = "btn btn-success" })
+</div>
 
 <table class="table table-bordered table-striped">
     <thead>
@@ -47,3 +54,26 @@
         }
     </tbody>
 </table>
+
+@section Scripts {
+    <script type="text/javascript">
+
+        function loadDropdown(url, parametros, ddl, selected) {
+            $.get(url, parametros, function (data) {
+                ddl.empty();
+                ddl.append($('<option>', { value: '', text: 'Seleccione un cliente' }));
+                $.each(data, function (i, item) {
+                    ddl.append($('<option>', {
+                        value: item.Id,
+                        text: item.Nombre,
+                        selected: item.Id == selected
+                    }));
+                });
+            });
+        }
+        $(document).ready(function () {
+            loadDropdown('/Empleado/ObtenerClientesActivos', {}, $('#IdCliente'), '@Request["IdCliente"]');
+        });
+
+    </script>
+}

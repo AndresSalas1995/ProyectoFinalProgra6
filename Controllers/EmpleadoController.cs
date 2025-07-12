@@ -16,28 +16,19 @@ namespace ProyectoFinalPogragamacionVI.Controllers
     {
         // GET: Empleado
         //Carga mi lista en consultar cobro empleado
-        public ActionResult Index(string nombreCliente, int? mes, int ? anno)
+        public ActionResult Index(int? IdCliente, int? mes, int? anno)
         {
             List<SpConsultarCobroResult> lista = new List<SpConsultarCobroResult>();
 
             using (var db = new PviProyectoFinalDB("MyDatabase"))
             {
-                if (string.IsNullOrWhiteSpace(nombreCliente))
-                {
-                    nombreCliente = null;
-                }
-
-                //Si no hay filtros uso el sp sin filtros
-                if (string.IsNullOrEmpty(nombreCliente) && mes == null && anno == null)
+                if (IdCliente == null && mes == null && anno == null)
                 {
                     lista = db.SpConsultarCobro().ToList();
                 }
-                //Si hay filtro debo usar el sp con filtros
-                else 
+                else
                 {
-                    //Mapeo manual si el SP con filtros devuelve un resultado diferente
-                    //Nos aseguramos que se devulven los campos necesarios
-                    var resultado = db.SpFiltrarCobrosEmpleado(nombreCliente, mes, anno).ToList();
+                    var resultado = db.SpFiltrarCobrosEmpleado(IdCliente, mes, anno).ToList();
 
                     lista = resultado.Select(r => new SpConsultarCobroResult
                     {
@@ -47,9 +38,30 @@ namespace ProyectoFinalPogragamacionVI.Controllers
                         Periodo = r.Periodo,
                         Estado = r.Estado
                     }).ToList();
-                } 
+                }
             }
+
             return View(lista);
         }
+
+        //Carga el dropdown de lista de clientes activos
+        [HttpGet]
+        public JsonResult ObtenerClientesActivos()
+        {
+            var datos = new List<Dropdown>();
+            using (var db = new PviProyectoFinalDB("MyDatabase"))
+            {
+                datos = db.SpObtenerClientesActivos()
+                    .Select(c => new Dropdown
+                    {
+                        Id = c.Id_persona,
+                        Nombre = c.Nombre_completo
+                    }).ToList();
+            }
+            return Json(datos, JsonRequestBehavior.AllowGet);
+        }
+
+
     }
+
 }

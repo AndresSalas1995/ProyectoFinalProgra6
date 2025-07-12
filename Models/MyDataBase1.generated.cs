@@ -390,16 +390,13 @@ namespace DataModels
 
 		#region SpFiltrarCobrosEmpleado
 
-		public static IEnumerable<SpFiltrarCobrosEmpleadoResult> SpFiltrarCobrosEmpleado(this PviProyectoFinalDB dataConnection, string @nombreCliente, int? @mes, int? @anno)
+		public static IEnumerable<SpFiltrarCobrosEmpleadoResult> SpFiltrarCobrosEmpleado(this PviProyectoFinalDB dataConnection, int? @IdCliente, int? @mes, int? @anno)
 		{
 			var parameters = new []
 			{
-				new DataParameter("@nombre_cliente", @nombreCliente, LinqToDB.DataType.NVarChar)
-				{
-					Size = 100
-				},
-				new DataParameter("@mes",            @mes,           LinqToDB.DataType.Int32),
-				new DataParameter("@anno",           @anno,          LinqToDB.DataType.Int32)
+				new DataParameter("@IdCliente", @IdCliente, LinqToDB.DataType.Int32),
+				new DataParameter("@mes",       @mes,       LinqToDB.DataType.Int32),
+				new DataParameter("@anno",      @anno,      LinqToDB.DataType.Int32)
 			};
 
 			return dataConnection.QueryProc<SpFiltrarCobrosEmpleadoResult>("[dbo].[SpFiltrarCobrosEmpleado]", parameters);
@@ -492,6 +489,57 @@ namespace DataModels
 			[Column("id_persona")     ] public int?   Id_persona      { get; set; }
 			[Column("nombre_completo")] public string Nombre_completo { get; set; }
 			[Column("es_empleado")    ] public int    Es_empleado     { get; set; }
+		}
+
+		#endregion
+
+		#region SpObtenerCasasPorCliente
+
+		public static IEnumerable<SpObtenerCasasPorClienteResult> SpObtenerCasasPorCliente(this PviProyectoFinalDB dataConnection, int? @IdCliente)
+		{
+			var parameters = new []
+			{
+				new DataParameter("@IdCliente", @IdCliente, LinqToDB.DataType.Int32)
+			};
+
+			return dataConnection.QueryProc<SpObtenerCasasPorClienteResult>("[dbo].[SpObtenerCasasPorCliente]", parameters);
+		}
+
+		public partial class SpObtenerCasasPorClienteResult
+		{
+			[Column("id_casa")    ] public int    Id_casa     { get; set; }
+			[Column("nombre_casa")] public string Nombre_casa { get; set; }
+		}
+
+		#endregion
+
+		#region SpObtenerClientesActivos
+
+		public static IEnumerable<SpObtenerClientesActivosResult> SpObtenerClientesActivos(this PviProyectoFinalDB dataConnection)
+		{
+			return dataConnection.QueryProc<SpObtenerClientesActivosResult>("[dbo].[SpObtenerClientesActivos]");
+		}
+
+		public partial class SpObtenerClientesActivosResult
+		{
+			[Column("id_persona")     ] public int    Id_persona      { get; set; }
+			[Column("nombre_completo")] public string Nombre_completo { get; set; }
+		}
+
+		#endregion
+
+		#region SpObtenerServiciosActivos
+
+		public static IEnumerable<SpObtenerServiciosActivosResult> SpObtenerServiciosActivos(this PviProyectoFinalDB dataConnection)
+		{
+			return dataConnection.QueryProc<SpObtenerServiciosActivosResult>("[dbo].[SpObtenerServiciosActivos]");
+		}
+
+		public partial class SpObtenerServiciosActivosResult
+		{
+			[Column("id_servicio")] public int     Id_servicio { get; set; }
+			[Column("nombre")     ] public string  Nombre      { get; set; }
+			[Column("precio")     ] public decimal Precio      { get; set; }
 		}
 
 		#endregion
