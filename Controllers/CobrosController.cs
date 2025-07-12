@@ -18,17 +18,5 @@ namespace ProyectoFinalPogragamacionVI.Controllers
             return View();
         }
 
-        public ActionResult Detalle(int id)
-        {
-            using (var db = new PviProyectoFinalDB("MyDatabase"))
-            {
-                var resultado = db.SpConsultarDetalleCobro(id).ToList();
-
-               
-            }
-            return View();
-        }
-
-
     }
 }
