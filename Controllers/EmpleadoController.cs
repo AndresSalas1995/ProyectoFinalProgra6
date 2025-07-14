@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Web;
 using System.Web.Mvc;
 using DataModels;
@@ -61,6 +62,94 @@ namespace ProyectoFinalPogragamacionVI.Controllers
             return Json(datos, JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult Crear(int? id)
+        {
+            // Listas internas año y mes
+            var años = Enumerable.Range(2024, 11)  // 2024 a 2034 inclusive
+                .Select(y => new SelectListItem { Value = y.ToString(), Text = y.ToString() })
+                .ToList();
+
+            años.Insert(0, new SelectListItem { Value = "", Text = "Seleccione un año" });
+
+            var meses = new List<SelectListItem>
+            {
+                 new SelectListItem { Value = "", Text = "Seleccione un mes" },
+                 new SelectListItem { Value = "1", Text = "Enero" },
+                 new SelectListItem { Value = "2", Text = "Febrero" },
+                 new SelectListItem { Value = "3", Text = "Marzo" },
+                 new SelectListItem { Value = "4", Text = "Abril" },
+                 new SelectListItem { Value = "5", Text = "Mayo" },
+                 new SelectListItem { Value = "6", Text = "Junio" },
+                 new SelectListItem { Value = "7", Text = "Julio" },
+                 new SelectListItem { Value = "8", Text = "Agosto" },
+                 new SelectListItem { Value = "9", Text = "Septiembre" },
+                 new SelectListItem { Value = "10", Text = "Octubre" },
+                 new SelectListItem { Value = "11", Text = "Noviembre" },
+                 new SelectListItem { Value = "12", Text = "Diciembre" }
+             };
+
+            ViewBag.Años = años;
+            ViewBag.Meses = meses;
+
+            //Lista para cargar los servicios al chkbox
+            List<SelectListItem> servicios;
+            using (var db = new PviProyectoFinalDB("MyDatabase"))
+            {
+                servicios = db.Servicios
+                              .Where(s => s.Estado == true)
+                              .Select(s => new SelectListItem
+                              {
+                                  Value = s.IdServicio.ToString(),
+                                  Text = s.Nombre
+                              }).ToList();
+            }
+
+            ViewBag.Servicios = servicios;
+
+            Cobros cobros = new Cobros();
+
+            try
+            {
+                //mostramos la vista, se inserta un cobro
+                using (var db = new PviProyectoFinalDB("MyDatabase"))
+                {
+                    cobros = db.SpObtenerCobroPorId(id).Select(c => new Cobros
+                    {
+                        Id_cobro = c.Id_cobro,
+                        Nombre_casa = c.Nombre_casa,
+                        Nombre_cliente = c.Propietario,
+                        anno = c.Anno,
+                        mes = c.Mes,
+                        servicio = c.Nombre_servicio,
+                    }).FirstOrDefault();
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return View(cobros);
+        }
+
+        //[HttpPost] //guarda la informacion
+        //public ActionResult Crear(Cobros cobros)
+        //{
+        //    try
+        //    {
+        //        using (var db = new PviProyectoFinalDB("MyDatabase"))
+        //        {
+        //            db.SpInsertarCobroCompleto(cobros.Nombre_casa, cobros.Nombre_cliente, cobros.anno, cobros.mes, cobros.servicio);
+        //        }
+        //        return RedirectToAction("Index");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // Manejo de errores
+        //        ModelState.AddModelError("", "Ocurrió un error al guardar el cobro: " + ex.Message);
+        //    }
+        //    return View(cobros);
+        //}
 
     }
 

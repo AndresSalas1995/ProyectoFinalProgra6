@@ -491,6 +491,37 @@ namespace DataModels
 
 		#endregion
 
+		#region SpInsertarCobroCompleto
+
+		public static int SpInsertarCobroCompleto(this PviProyectoFinalDB dataConnection, int? @idCasa, int? @mes, int? @anno, string @estado, decimal? @monto, DateTime? @fechaPagada, string @servicios, string @detalleBitacora, int? @idUser)
+		{
+			var parameters = new []
+			{
+				new DataParameter("@id_casa",          @idCasa,          LinqToDB.DataType.Int32),
+				new DataParameter("@mes",              @mes,             LinqToDB.DataType.Int32),
+				new DataParameter("@anno",             @anno,            LinqToDB.DataType.Int32),
+				new DataParameter("@estado",           @estado,          LinqToDB.DataType.VarChar)
+				{
+					Size = 50
+				},
+				new DataParameter("@monto",            @monto,           LinqToDB.DataType.Decimal),
+				new DataParameter("@fecha_pagada",     @fechaPagada,     LinqToDB.DataType.Date),
+				new DataParameter("@servicios",        @servicios,       LinqToDB.DataType.Xml)
+				{
+					Size = -1
+				},
+				new DataParameter("@detalle_bitacora", @detalleBitacora, LinqToDB.DataType.VarChar)
+				{
+					Size = 255
+				},
+				new DataParameter("@id_user",          @idUser,          LinqToDB.DataType.Int32)
+			};
+
+			return dataConnection.ExecuteProc("[dbo].[sp_InsertarCobroCompleto]", parameters);
+		}
+
+		#endregion
+
 		#region SpLoginUsuario
 
 		public static IEnumerable<SpLoginUsuarioResult> SpLoginUsuario(this PviProyectoFinalDB dataConnection, string @Email, string @Contrasena)
@@ -551,6 +582,47 @@ namespace DataModels
 		{
 			[Column("id_persona")     ] public int    Id_persona      { get; set; }
 			[Column("nombre_completo")] public string Nombre_completo { get; set; }
+		}
+
+		#endregion
+
+		#region SpObtenerCobroPorId
+
+		public static IEnumerable<SpObtenerCobroPorIdResult> SpObtenerCobroPorId(this PviProyectoFinalDB dataConnection, int? @idCobro)
+		{
+			var parameters = new []
+			{
+				new DataParameter("@id_cobro", @idCobro, LinqToDB.DataType.Int32)
+			};
+
+			return dataConnection.QueryProc<SpObtenerCobroPorIdResult>("[dbo].[sp_ObtenerCobroPorId]", parameters);
+		}
+
+		public partial class SpObtenerCobroPorIdResult
+		{
+			[Column("id_cobro")            ] public int       Id_cobro             { get; set; }
+			[Column("mes")                 ] public int       Mes                  { get; set; }
+			[Column("anno")                ] public int       Anno                 { get; set; }
+			[Column("estado_cobro")        ] public string    Estado_cobro         { get; set; }
+			[Column("monto")               ] public decimal   Monto                { get; set; }
+			[Column("fecha_pagada")        ] public DateTime? Fecha_pagada         { get; set; }
+			[Column("id_casa")             ] public int       Id_casa              { get; set; }
+			[Column("nombre_casa")         ] public string    Nombre_casa          { get; set; }
+			[Column("precio_casa")         ] public decimal   Precio_casa          { get; set; }
+			[Column("numero_habitaciones") ] public int       Numero_habitaciones  { get; set; }
+			[Column("numero_banos")        ] public int       Numero_banos         { get; set; }
+			[Column("id_persona")          ] public int       Id_persona           { get; set; }
+			[Column("propietario")         ] public string    Propietario          { get; set; }
+			[Column("email_propietario")   ] public string    Email_propietario    { get; set; }
+			[Column("telefono")            ] public string    Telefono             { get; set; }
+			[Column("id_servicio")         ] public int       Id_servicio          { get; set; }
+			[Column("nombre_servicio")     ] public string    Nombre_servicio      { get; set; }
+			[Column("precio_servicio")     ] public decimal   Precio_servicio      { get; set; }
+			[Column("descripcion_servicio")] public string    Descripcion_servicio { get; set; }
+			[Column("id_bitacora")         ] public int?      Id_bitacora          { get; set; }
+			[Column("detalle_bitacora")    ] public string    Detalle_bitacora     { get; set; }
+			[Column("fecha_bitacora")      ] public DateTime? Fecha_bitacora       { get; set; }
+			[Column("usuario_bitacora")    ] public string    Usuario_bitacora     { get; set; }
 		}
 
 		#endregion
