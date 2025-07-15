@@ -61,9 +61,39 @@
 @*Parte de Javascript*@
 
 @section Scripts {
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/validacionesGenericas.js"></script>
+
+
     <script type="text/javascript">
         $(document).ready(function () {
+
+            /*validacion de servicios*/
+            $.validator.addMethod("atLeastOneServicio", function (value, element) {
+                return $('input[name="Servicios"]:checked').length > 0;
+            }, "Seleccione al menos un servicio.");
+
+
+            // Validación del formulario
+            $("#myform").validate({
+                rules: {
+                    'IdCliente': { required: true },
+                    'IdCasa': { required: true },
+                    'Anno': { required: true, number: true },
+                    'Mes': { required: true },
+                    'Servicios': { atLeastOneServicio: true }
+                },
+                messages: {
+                    'IdCliente': "Seleccione un cliente.",
+                    'IdCasa': "Seleccione una casa.",
+                    'Anno': "Seleccione un año.",
+                    'Mes': "Seleccione un mes.",
+                    'Servicios': "Marque al menos un servicio."
+                }
+            });
+
             // Cargar clientes activos al cargar la página
             $.getJSON('/Empleado/ObtenerClientesActivos', function (clientes) {
                 var clienteDropdown = $('#IdCliente');
@@ -103,3 +133,4 @@
         });
     </script>
 }
+
