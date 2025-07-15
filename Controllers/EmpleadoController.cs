@@ -81,8 +81,6 @@ namespace ProyectoFinalPogragamacionVI.Controllers
             return Json(casas, JsonRequestBehavior.AllowGet);
         }
 
-
-
         public ActionResult Crear(int? id)
         {
             // Listas internas año y mes
