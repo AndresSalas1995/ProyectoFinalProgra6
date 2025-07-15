@@ -54,7 +54,52 @@
             }
         </div>
     </div>
-        <button type="submit" class="btn btn-primary">Guardar</button>
-        <a href="~/Empleado/Index" class="btn btn-dark">Regresar</a>
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <a href="~/Empleado/Index" class="btn btn-dark">Regresar</a>
 </form>
 
+@*Parte de Javascript*@
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            // Cargar clientes activos al cargar la página
+            $.getJSON('/Empleado/ObtenerClientesActivos', function (clientes) {
+                var clienteDropdown = $('#IdCliente');
+                clienteDropdown.empty();
+                clienteDropdown.append('<option value="">Seleccione un cliente</option>');
+                $.each(clientes, function (i, cliente) {
+                    clienteDropdown.append($('<option>', {
+                        value: cliente.Id,
+                        text: cliente.Nombre
+                    }));
+                });
+            });
+
+            // Al cambiar el cliente, cargar las casas relacionadas
+            $('#IdCliente').on('change', function () {
+                var idCliente = $(this).val();
+                var casaDropdown = $('#IdCasa');
+                casaDropdown.empty();
+                casaDropdown.append('<option value="">Cargando casas...</option>');
+
+                if (idCliente) {
+                    $.getJSON('/Empleado/ObtenerCasasPorCliente', { idCliente: idCliente }, function (casas) {
+                        casaDropdown.empty();
+                        casaDropdown.append('<option value="">Seleccione una casa</option>');
+                        $.each(casas, function (i, casa) {
+                            casaDropdown.append($('<option>', {
+                                value: casa.Id,
+                                text: casa.Nombre
+                            }));
+                        });
+                    });
+                } else {
+                    casaDropdown.empty();
+                    casaDropdown.append('<option value="">Seleccione una casa</option>');
+                }
+            });
+        });
+    </script>
+}

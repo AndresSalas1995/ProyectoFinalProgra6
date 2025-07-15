@@ -62,6 +62,27 @@ namespace ProyectoFinalPogragamacionVI.Controllers
             return Json(datos, JsonRequestBehavior.AllowGet);
         }
 
+        //Dropdown para cargar casas por cliente
+        [HttpGet]
+        public JsonResult ObtenerCasasPorCliente(int idCliente)
+        {
+            var casas = new List<Dropdown>();
+
+            using (var db = new PviProyectoFinalDB("MyDatabase"))
+            {
+                casas = db.SpObtenerCasasPorCliente(idCliente)
+                    .Select(c => new Dropdown
+                    {
+                        Id = c.Id_casa,
+                        Nombre = c.Nombre_casa
+                    }).ToList();
+            }
+
+            return Json(casas, JsonRequestBehavior.AllowGet);
+        }
+
+
+
         public ActionResult Crear(int? id)
         {
             // Listas internas año y mes
