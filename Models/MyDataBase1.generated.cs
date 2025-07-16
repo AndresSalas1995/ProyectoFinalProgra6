@@ -493,28 +493,18 @@ namespace DataModels
 
 		#region SpInsertarCobroCompleto
 
-		public static int SpInsertarCobroCompleto(this PviProyectoFinalDB dataConnection, int? @idCasa, int? @mes, int? @anno, string @estado, decimal? @monto, DateTime? @fechaPagada, string @servicios, string @detalleBitacora, int? @idUser)
+		public static int SpInsertarCobroCompleto(this PviProyectoFinalDB dataConnection, int? @idCasa, int? @mes, int? @anno, int? @idUser, DataTable @serviciosSeleccionados)
 		{
 			var parameters = new []
 			{
-				new DataParameter("@id_casa",          @idCasa,          LinqToDB.DataType.Int32),
-				new DataParameter("@mes",              @mes,             LinqToDB.DataType.Int32),
-				new DataParameter("@anno",             @anno,            LinqToDB.DataType.Int32),
-				new DataParameter("@estado",           @estado,          LinqToDB.DataType.VarChar)
+				new DataParameter("@id_casa",                @idCasa,                 LinqToDB.DataType.Int32),
+				new DataParameter("@mes",                    @mes,                    LinqToDB.DataType.Int32),
+				new DataParameter("@anno",                   @anno,                   LinqToDB.DataType.Int32),
+				new DataParameter("@id_user",                @idUser,                 LinqToDB.DataType.Int32),
+				new DataParameter("@serviciosSeleccionados", @serviciosSeleccionados, LinqToDB.DataType.Structured)
 				{
-					Size = 50
-				},
-				new DataParameter("@monto",            @monto,           LinqToDB.DataType.Decimal),
-				new DataParameter("@fecha_pagada",     @fechaPagada,     LinqToDB.DataType.Date),
-				new DataParameter("@servicios",        @servicios,       LinqToDB.DataType.Xml)
-				{
-					Size = -1
-				},
-				new DataParameter("@detalle_bitacora", @detalleBitacora, LinqToDB.DataType.VarChar)
-				{
-					Size = 255
-				},
-				new DataParameter("@id_user",          @idUser,          LinqToDB.DataType.Int32)
+					DbType = "[dbo].[ServicioList]"
+				}
 			};
 
 			return dataConnection.ExecuteProc("[dbo].[sp_InsertarCobroCompleto]", parameters);

@@ -151,24 +151,40 @@ namespace ProyectoFinalPogragamacionVI.Controllers
             return View(cobros);
         }
 
-        //[HttpPost] //guarda la informacion
-        //public ActionResult Crear(Cobros cobros)
-        //{
-        //    try
-        //    {
-        //        using (var db = new PviProyectoFinalDB("MyDatabase"))
-        //        {
-        //            db.SpInsertarCobroCompleto(cobros.Nombre_casa, cobros.Nombre_cliente, cobros.anno, cobros.mes, cobros.servicio);
-        //        }
-        //        return RedirectToAction("Index");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        // Manejo de errores
-        //        ModelState.AddModelError("", "Ocurrió un error al guardar el cobro: " + ex.Message);
-        //    }
-        //    return View(cobros);
-        //}
+        [HttpPost] //guarda la informacion
+        public ActionResult Crear(Cobros cobros)
+        {
+            try
+            {
+                using (var db = new PviProyectoFinalDB("MyDatabase"))
+                {
+                    // Crear DataTable para los servicios seleccionados
+                    var serviciosTable = new System.Data.DataTable();
+                    serviciosTable.Columns.Add("id_servicio", typeof(int));
+
+                    foreach (var idServicio in cobros.Servicios)
+                    {
+                        serviciosTable.Rows.Add(idServicio);
+                    } // <-- Este tipo lo genera LINQ to SQL
+
+
+                    // Ejecutar el procedimiento almacenado
+                    db.SpInsertarCobroCompleto(
+                        idCasa: cobros.IdCasa,
+                        mes: cobros.mes,
+                        anno: cobros.anno,
+                        idUser: Convert.ToInt32(Session["id_persona"]),
+                        serviciosSeleccionados: serviciosTable
+                    );
+                }
+
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                   return View(cobros);
+            }
+        }
 
     }
 
