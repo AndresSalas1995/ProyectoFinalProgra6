@@ -257,6 +257,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AutenticacionController.cs" />
+    <Compile Include="Controllers\CobrosController.cs" />
     <Compile Include="Controllers\Dropdown.cs" />
     <Compile Include="Controllers\EmpleadoController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -356,6 +357,7 @@
     <Content Include="Views\Empleado\Index.cshtml" />
     <Content Include="Views\Usuario\Index.cshtml" />
     <Content Include="Views\Empleado\Crear.cshtml" />
+    <Content Include="Views\Cobros\Detalle.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

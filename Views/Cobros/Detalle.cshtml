@@ -1,0 +1,36 @@
+﻿@model DataModels.PviProyectoFinalDBStoredProcedures.SpConsultarDetalleCobroResult
+
+@{
+    ViewBag.Title = "Detalle del Cobro";
+}
+
+<h2>Detalle del Cobro</h2>
+
+<table class="table">
+    <tr>
+        <th>ID Cobro</th>
+        <td>@Model.Id_cobro</td>
+    </tr>
+    <tr>
+        <th>Nombre de Casa</th>
+        <td>@Model.Nombre_casa</td>
+    </tr>
+    <tr>
+        <th>Propietario</th>
+        <td>@Model.Nombre_cliente</td>
+    </tr>
+    <tr>
+        <th>Mes</th>
+        <td>@Model.Mes</td>
+    </tr>
+    <tr>
+        <th>Año</th>
+        <td>@Model.Año</td>
+    </tr>
+    <tr>
+        <th>Estado</th>
+        <td>@Model.Estado</td>
+    </tr>
+</table>
+
+<a href="@Url.Action("Index", "Empleado")" class="btn btn-dark">Regresar</a>

@@ -16,7 +16,7 @@ namespace ProyectoFinalPogragamacionVI.Models
         public int anno { get; set; }
         public int mes { get; set; }
 
-        public string servicio { get; set; } //nombre del servicio
+        public string servicio { get; set; } 
         public List<int> Servicios { get; set; }  //checkbox inputs
     }
 

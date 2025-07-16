@@ -84,7 +84,7 @@ namespace ProyectoFinalPogragamacionVI.Controllers
         public ActionResult Crear(int? id)
         {
             // Listas internas año y mes
-            var años = Enumerable.Range(2024, 11)  // 2024 a 2034 inclusive
+            var años = Enumerable.Range(2024, 11)  // 2024 a 2034
                 .Select(y => new SelectListItem { Value = y.ToString(), Text = y.ToString() })
                 .ToList();
 
