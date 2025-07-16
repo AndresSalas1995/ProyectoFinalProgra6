@@ -269,6 +269,7 @@
     <Compile Include="Models\ConsultarCobro.cs" />
     <Compile Include="Models\ConsultarCobroUsuario.cs" />
     <Compile Include="Models\DetalleCobro.cs" />
+    <Compile Include="Models\DetalleCobroViewModel.cs" />
     <Compile Include="Models\MyDataBase1.generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

@@ -306,6 +306,28 @@ namespace DataModels
 
 		#endregion
 
+		#region SpConsultarBitacoraPorCobro
+
+		public static IEnumerable<SpConsultarBitacoraPorCobroResult> SpConsultarBitacoraPorCobro(this PviProyectoFinalDB dataConnection, int? @IdCobro)
+		{
+			var parameters = new []
+			{
+				new DataParameter("@IdCobro", @IdCobro, LinqToDB.DataType.Int32)
+			};
+
+			return dataConnection.QueryProc<SpConsultarBitacoraPorCobroResult>("[dbo].[SpConsultarBitacoraPorCobro]", parameters);
+		}
+
+		public partial class SpConsultarBitacoraPorCobroResult
+		{
+			public DateTime Fecha        { get; set; }
+			public string   Accion       { get; set; }
+			public string   Detalle      { get; set; }
+			public string   RealizadoPor { get; set; }
+		}
+
+		#endregion
+
 		#region SpConsultarCobro
 
 		public static IEnumerable<SpConsultarCobroResult> SpConsultarCobro(this PviProyectoFinalDB dataConnection)
@@ -370,6 +392,26 @@ namespace DataModels
 			[Column("estado")           ] public string    Estado            { get; set; }
 			[Column("fecha_cancelacion")] public DateTime? Fecha_cancelacion { get; set; }
 			[Column("monto")            ] public decimal   Monto             { get; set; }
+		}
+
+		#endregion
+
+		#region SpConsultarServiciosPorCobro
+
+		public static IEnumerable<SpConsultarServiciosPorCobroResult> SpConsultarServiciosPorCobro(this PviProyectoFinalDB dataConnection, int? @IdCobro)
+		{
+			var parameters = new []
+			{
+				new DataParameter("@IdCobro", @IdCobro, LinqToDB.DataType.Int32)
+			};
+
+			return dataConnection.QueryProc<SpConsultarServiciosPorCobroResult>("[dbo].[SpConsultarServiciosPorCobro]", parameters);
+		}
+
+		public partial class SpConsultarServiciosPorCobroResult
+		{
+			public string Nombre   { get; set; }
+			public int    Incluido { get; set; }
 		}
 
 		#endregion

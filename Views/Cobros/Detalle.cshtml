@@ -1,4 +1,4 @@
-﻿@model DataModels.PviProyectoFinalDBStoredProcedures.SpConsultarDetalleCobroResult
+﻿@model ProyectoFinalPogragamacionVI.Models.DetalleCobroViewModel
 
 @{
     ViewBag.Title = "Detalle del Cobro";
@@ -9,28 +9,75 @@
 <table class="table">
     <tr>
         <th>ID Cobro</th>
-        <td>@Model.Id_cobro</td>
+        <td>@Model.Detalle.Id_cobro</td>
     </tr>
     <tr>
         <th>Nombre de Casa</th>
-        <td>@Model.Nombre_casa</td>
+        <td>@Model.Detalle.Nombre_casa</td>
     </tr>
     <tr>
         <th>Propietario</th>
-        <td>@Model.Nombre_cliente</td>
+        <td>@Model.Detalle.Nombre_cliente</td>
     </tr>
     <tr>
         <th>Mes</th>
-        <td>@Model.Mes</td>
+        <td>@Model.Detalle.Mes</td>
     </tr>
     <tr>
         <th>Año</th>
-        <td>@Model.Año</td>
+        <td>@Model.Detalle.Año</td>
     </tr>
     <tr>
         <th>Estado</th>
-        <td>@Model.Estado</td>
+        <td>@Model.Detalle.Estado</td>
     </tr>
+    <tr>
+        <th>Monto Cobro</th>
+        <td>@Model.Detalle.Monto.ToString("C")</td>
+    </tr>
+</table>
+
+@*Servicios*@
+<h3>Servicios</h3>
+<ul>
+    @foreach (var servicio in Model.Servicios)
+    {
+        <li>
+            <input type="checkbox" disabled="disabled" @(servicio.Incluido ? "checked" : "") />
+            @servicio.Nombre
+        </li>
+    }
+</ul>
+
+@*Botones de acción*@
+<div class="mb-3">
+    <a href="@Url.Action("Editar", "Cobros", new { id = Model.Detalle.Id_cobro })" class="btn btn-primary">Editar</a>
+    <a href="@Url.Action("Pagar", "Cobros", new { id = Model.Detalle.Id_cobro })" class="btn btn-success">Pagar</a>
+    <a href="@Url.Action("Eliminar", "Cobros", new { id = Model.Detalle.Id_cobro })" class="btn btn-danger" onclick="return confirm('¿Está seguro de eliminar este cobro?');">Eliminar</a>
+</div>
+
+@*Bitácora de acciones*@
+<h3>Lista de acciones realizadas</h3>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Fecha</th>
+            <th>Acción</th>
+            <th>Detalle</th>
+            <th>Realizado por</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var log in Model.Bitacora)
+        {
+            <tr>
+                <td>@log.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
+                <td>@log.Accion</td>
+                <td>@log.Detalle</td>
+                <td>@log.RealizadoPor</td>
+            </tr>
+        }
+    </tbody>
 </table>
 
 <a href="@Url.Action("Index", "Empleado")" class="btn btn-dark">Regresar</a>
