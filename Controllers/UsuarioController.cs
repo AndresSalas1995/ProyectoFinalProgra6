@@ -27,7 +27,7 @@ namespace ProyectoFinalPogragamacionVI.Controllers
                 var persona = db.Personas.FirstOrDefault(p => p.IdPersona == idPersona);
                 if (persona != null)
                 {
-                    nombreUsuario = persona.Nombre;
+                    nombreUsuario = persona.Nombre + " " + persona.Apellido;
                 }
             }
 
@@ -59,22 +59,47 @@ namespace ProyectoFinalPogragamacionVI.Controllers
 
         public ActionResult Crear(int? id)
         {
-            // Verificar si la sesión está activa y capturar el ID de la persona
-
             int idPersona = (int)Session["id_persona"];
             string nombreUsuario = "";
+            List<SelectListItem> servicios;
+            Cobros cobros = new Cobros();
 
             using (var db = new PviProyectoFinalDB("MyDatabase"))
             {
+                // Obtener nombre usuario
                 var persona = db.Personas.FirstOrDefault(p => p.IdPersona == idPersona);
                 if (persona != null)
                 {
-                    nombreUsuario = persona.Nombre;
+                    nombreUsuario = persona.Nombre + " " + persona.Apellido;
+                }
+
+                // Servicios activos
+                servicios = db.Servicios
+                              .Where(s => s.Estado == true)
+                              .Select(s => new SelectListItem
+                              {
+                                  Value = s.IdServicio.ToString(),
+                                  Text = s.Nombre
+                              }).ToList();
+
+                // Si hay id, obtener cobro
+                if (id.HasValue)
+                {
+                    cobros = db.SpObtenerCobroPorId(id).Select(c => new Cobros
+                    {
+                        Id_cobro = c.Id_cobro,
+                        Nombre_casa = c.Nombre_casa,
+                        Nombre_cliente = c.Propietario,
+                        anno = c.Anno,
+                        mes = c.Mes,
+                        servicio = c.Nombre_servicio,
+                    }).FirstOrDefault();
                 }
             }
 
             ViewBag.IdUsuario = idPersona;
             ViewBag.NombreUsuario = nombreUsuario;
+            ViewBag.Servicios = servicios;
 
             // Listas internas año y mes
             var años = Enumerable.Range(2024, 11)  // 2024 a 2034
@@ -103,43 +128,6 @@ namespace ProyectoFinalPogragamacionVI.Controllers
             ViewBag.Años = años;
             ViewBag.Meses = meses;
 
-            //Lista para cargar los servicios al chkbox
-            List<SelectListItem> servicios;
-            using (var db = new PviProyectoFinalDB("MyDatabase"))
-            {
-                servicios = db.Servicios
-                              .Where(s => s.Estado == true)
-                              .Select(s => new SelectListItem
-                              {
-                                  Value = s.IdServicio.ToString(),
-                                  Text = s.Nombre
-                              }).ToList();
-            }
-
-            ViewBag.Servicios = servicios;
-
-            Cobros cobros = new Cobros();
-
-            try
-            {
-                //mostramos la vista, se inserta un cobro
-                using (var db = new PviProyectoFinalDB("MyDatabase"))
-                {
-                    cobros = db.SpObtenerCobroPorId(id).Select(c => new Cobros
-                    {
-                        Id_cobro = c.Id_cobro,
-                        Nombre_casa = c.Nombre_casa,
-                        Nombre_cliente = c.Propietario,
-                        anno = c.Anno,
-                        mes = c.Mes,
-                        servicio = c.Nombre_servicio,
-                    }).FirstOrDefault();
-                }
-            }
-            catch (Exception ex)
-            {
-
-            }
 
             return View(cobros);
         }
