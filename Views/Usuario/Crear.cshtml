@@ -1,0 +1,109 @@
+﻿@model ProyectoFinalPogragamacionVI.Models.Cobros
+
+@{
+    ViewData["Title"] = "Crear Cobro";
+}
+
+<h2>Crear Cobro</h2>
+
+<form method="post" id="myform">
+    @Html.HiddenFor(m => m.Id_cobro)
+    <input type="hidden" name="idCliente" value="@ViewBag.IdUsuario" />
+
+    <select id="clienteDropdown" name="clienteDropdown" class="form-control" disabled>
+        <option value="@ViewBag.IdUsuario" selected>@ViewBag.NombreUsuario</option>
+    </select>
+    <div class="mb-3">
+        <label for="IdCasa" class="form-label"></label>
+        <select id="IdCasa" name="IdCasa" class="form-control">
+            <option value="">Seleccione una casa</option>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label for="anno" class="form-label">Año</label>
+        <select id="anno" name="anno" class="form-control">
+            @foreach (var año in ViewBag.Años as List<SelectListItem>)
+            {
+                <option value="@año.Value">@año.Text</option>
+            }
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label for="mes" class="form-label">Mes</label>
+        <select id="mes" name="mes" class="form-control">
+            @foreach (var mes in ViewBag.Meses as List<SelectListItem>)
+            {
+                <option value="@mes.Value">@mes.Text</option>
+            }
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Servicios</label>
+        <div>
+            @foreach (var servicio in ViewBag.Servicios as List<SelectListItem>)
+            {
+                <div class="form-check">
+                    <input type="checkbox" name="Servicios" value="@servicio.Value" class="form-check-input" id="servicio_@servicio.Value" />
+                    <label class="form-check-label" for="servicio_@servicio.Value">@servicio.Text</label>
+                </div>
+            }
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <a href="~/Usuario/Index" class="btn btn-dark">Regresar</a>
+</form>
+
+@*Parte de Javascript*@
+
+@section Scripts {
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/validacionesGenericas.js"></script>
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            /*validacion de servicios*/
+            $.validator.addMethod("atLeastOneServicio", function (value, element) {
+                return $('input[name="Servicios"]:checked').length > 0;
+            }, "Seleccione al menos un servicio.");
+
+            // Cargar casas del usuario autenticado al cargar la página
+            var idCliente = '@ViewBag.IdUsuario';
+            if (idCliente) {
+            $.getJSON('/Usuario/ObtenerCasasPorCliente', { idCliente: idCliente }, function (casas) {
+             var casaDropdown = $('#IdCasa');
+             casaDropdown.empty();
+             casaDropdown.append('<option value="">Seleccione una casa</option>');
+                $.each(casas, function (i, casa) {
+            casaDropdown.append($('<option>', {
+                value: casa.Id,
+                text: casa.Nombre
+            }));
+        });
+    });
+}
+
+            // Validación del formulario
+            $("#myform").validate({
+                rules: {
+                    'IdCasa': { required: true },
+                    'anno': { required: true, number: true },
+                    'mes': { required: true },
+                    'Servicios': { atLeastOneServicio: true }
+                },
+                messages: {
+                    'IdCasa': "Seleccione una casa.",
+                    'anno': "Seleccione un año.",
+                    'mes': "Seleccione un mes.",
+                    'Servicios': "Marque al menos un servicio."
+                }
+            });
+        });
+    </script>
+}

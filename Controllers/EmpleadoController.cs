@@ -165,7 +165,7 @@ namespace ProyectoFinalPogragamacionVI.Controllers
                     foreach (var idServicio in cobros.Servicios)
                     {
                         serviciosTable.Rows.Add(idServicio);
-                    } // <-- Este tipo lo genera LINQ to SQL
+                    } 
 
 
                     // Ejecutar el procedimiento almacenado
