@@ -165,7 +165,7 @@ namespace ProyectoFinalPogragamacionVI.Controllers
                 {
                     //Validacion de si existe un cobro para la casa y mes/año seleccionados
                     var existeCobro = db.SpValidarCobroExistente(cobros.IdCasa, cobros.mes, cobros.anno).FirstOrDefault();
-                    if (existeCobro != null)
+                    if (existeCobro != null && existeCobro.Existe == 1)
                     {
                         ModelState.AddModelError("", "Ya existe un cobro para la casa, mes y año seleccionados.");
                         CargarCombos(); // Cargar los combos para volver a mostrar la vista
