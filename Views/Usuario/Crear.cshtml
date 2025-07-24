@@ -7,6 +7,10 @@
 <h2>Crear Cobro</h2>
 
 <form method="post" id="myform">
+    @if (!ViewData.ModelState.IsValid)
+    {
+        @Html.ValidationSummary(false, "", new { @class = "alert alert-danger" })
+    }
     @Html.HiddenFor(m => m.Id_cobro)
     <input type="hidden" name="idCliente" value="@ViewBag.IdUsuario" />
 

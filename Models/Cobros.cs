@@ -7,7 +7,7 @@ namespace ProyectoFinalPogragamacionVI.Models
 {
     public class Cobros
     {
-        public int Id_cobro { get; set; }
+        public int? Id_cobro { get; set; }
         public string Nombre_casa { get; set; }
         public string Nombre_cliente { get; set; }
 

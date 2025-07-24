@@ -705,6 +705,27 @@ namespace DataModels
 		}
 
 		#endregion
+
+		#region SpValidarCobroExistente
+
+		public static IEnumerable<SpValidarCobroExistenteResult> SpValidarCobroExistente(this PviProyectoFinalDB dataConnection, int? @idCasa, int? @mes, int? @anno)
+		{
+			var parameters = new []
+			{
+				new DataParameter("@idCasa", @idCasa, LinqToDB.DataType.Int32),
+				new DataParameter("@mes",    @mes,    LinqToDB.DataType.Int32),
+				new DataParameter("@anno",   @anno,   LinqToDB.DataType.Int32)
+			};
+
+			return dataConnection.QueryProc<SpValidarCobroExistenteResult>("[dbo].[SpValidarCobroExistente]", parameters);
+		}
+
+		public partial class SpValidarCobroExistenteResult
+		{
+			public int Existe { get; set; }
+		}
+
+		#endregion
 	}
 
 	public static partial class SqlFunctions

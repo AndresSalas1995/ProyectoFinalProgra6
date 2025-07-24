@@ -7,6 +7,10 @@
 <h2>Crear Cobro</h2>
 
 <form method="post" id="myform">
+    @if (!ViewData.ModelState.IsValid)
+    {
+        @Html.ValidationSummary(false, "", new { @class = "alert alert-danger" })
+    }
     @Html.HiddenFor(m => m.Id_cobro)
 
     <div class="mb-3">
@@ -23,8 +27,8 @@
     </div>
 
     <div class="mb-3">
-        <label for="Anno" class="form-label">Año</label>
-        <select id="Anno" name="Anno" class="form-control">
+        <label for="anno" class="form-label">Año</label>
+        <select id="anno" name="anno" class="form-control">
             @foreach (var año in ViewBag.Años as List<SelectListItem>)
             {
                 <option value="@año.Value">@año.Text</option>
@@ -33,8 +37,8 @@
     </div>
 
     <div class="mb-3">
-        <label for="Mes" class="form-label">Mes</label>
-        <select id="Mes" name="Mes" class="form-control">
+        <label for="mes" class="form-label">Mes</label>
+        <select id="mes" name="mes" class="form-control">
             @foreach (var mes in ViewBag.Meses as List<SelectListItem>)
             {
                 <option value="@mes.Value">@mes.Text</option>
@@ -81,15 +85,15 @@
                 rules: {
                     'IdCliente': { required: true },
                     'IdCasa': { required: true },
-                    'Anno': { required: true, number: true },
-                    'Mes': { required: true },
+                    'anno': { required: true, number: true },
+                    'mes': { required: true },
                     'Servicios': { atLeastOneServicio: true }
                 },
                 messages: {
                     'IdCliente': "Seleccione un cliente.",
                     'IdCasa': "Seleccione una casa.",
-                    'Anno': "Seleccione un año.",
-                    'Mes': "Seleccione un mes.",
+                    'anno': "Seleccione un año.",
+                    'mes': "Seleccione un mes.",
                     'Servicios': "Marque al menos un servicio."
                 }
             });

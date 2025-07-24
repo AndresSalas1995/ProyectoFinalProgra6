@@ -51,9 +51,13 @@
 
 @*Botones de acción*@
 <div class="mb-3">
-    <a href="@Url.Action("Editar", "Cobros", new { id = Model.Detalle.Id_cobro })" class="btn btn-primary">Editar</a>
-    <a href="@Url.Action("Pagar", "Cobros", new { id = Model.Detalle.Id_cobro })" class="btn btn-success">Pagar</a>
-    <a href="@Url.Action("Eliminar", "Cobros", new { id = Model.Detalle.Id_cobro })" class="btn btn-danger" onclick="return confirm('¿Está seguro de eliminar este cobro?');">Eliminar</a>
+    @if (Model.Detalle.Estado == "Pendiente")
+    {
+        <a href="@Url.Action("Editar", "Cobros", new { id = Model.Detalle.Id_cobro })" class="btn btn-primary">Editar</a>
+        <a href="@Url.Action("Pagar", "Cobros", new { id = Model.Detalle.Id_cobro })" class="btn btn-success">Pagar</a>
+        <a href="@Url.Action("Eliminar", "Cobros", new { id = Model.Detalle.Id_cobro })" class="btn btn-danger" onclick="return confirm('¿Está seguro de eliminar este cobro?');">Eliminar</a>
+    }
+
 </div>
 
 @*Bitácora de acciones*@

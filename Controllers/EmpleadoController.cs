@@ -156,8 +156,21 @@ namespace ProyectoFinalPogragamacionVI.Controllers
         {
             try
             {
+                if (!ModelState.IsValid)
+                {
+                    CargarCombos();
+                    return View(cobros);
+                }
                 using (var db = new PviProyectoFinalDB("MyDatabase"))
                 {
+                    //Validacion de si existe un cobro para la casa y mes/año seleccionados
+                    var existeCobro = db.SpValidarCobroExistente(cobros.IdCasa, cobros.mes, cobros.anno).FirstOrDefault();
+                    if (existeCobro != null)
+                    {
+                        ModelState.AddModelError("", "Ya existe un cobro para la casa, mes y año seleccionados.");
+                        CargarCombos(); // Cargar los combos para volver a mostrar la vista
+                        return View(cobros);
+                    }
                     // Crear DataTable para los servicios seleccionados
                     var serviciosTable = new System.Data.DataTable();
                     serviciosTable.Columns.Add("id_servicio", typeof(int));
@@ -182,10 +195,44 @@ namespace ProyectoFinalPogragamacionVI.Controllers
             }
             catch (Exception ex)
             {
-                   return View(cobros);
+                CargarCombos();
+                return View(cobros);
             }
         }
+        private void CargarCombos()
+        {
+            using (var db = new PviProyectoFinalDB("MyDatabase"))
+            {
+                ViewBag.Servicios = db.Servicios
+                    .Where(s => s.Estado == true)
+                    .Select(s => new SelectListItem
+                    {
+                        Value = s.IdServicio.ToString(),
+                        Text = s.Nombre
+                    }).ToList();
+            }
 
+            ViewBag.Años = Enumerable.Range(2024, 11)
+            .Select(y => new SelectListItem { Value = y.ToString(), Text = y.ToString() })
+            .ToList();
+            ViewBag.Años.Insert(0, new SelectListItem { Value = "", Text = "Seleccione un año" });
+
+            ViewBag.Meses = new List<SelectListItem>
+            {
+                     new SelectListItem { Value = "", Text = "Seleccione un mes" },
+                     new SelectListItem { Value = "1", Text = "Enero" },
+                     new SelectListItem { Value = "2", Text = "Febrero" },
+                     new SelectListItem { Value = "3", Text = "Marzo" },
+                     new SelectListItem { Value = "4", Text = "Abril" },
+                     new SelectListItem { Value = "5", Text = "Mayo" },
+                     new SelectListItem { Value = "6", Text = "Junio" },
+                     new SelectListItem { Value = "7", Text = "Julio" },
+                     new SelectListItem { Value = "8", Text = "Agosto" },
+                     new SelectListItem { Value = "9", Text = "Septiembre" },
+                     new SelectListItem { Value = "10", Text = "Octubre" },
+                     new SelectListItem { Value = "11", Text = "Noviembre" },
+                     new SelectListItem { Value = "12", Text = "Diciembre" }
+            };
+        }
     }
-
 }
