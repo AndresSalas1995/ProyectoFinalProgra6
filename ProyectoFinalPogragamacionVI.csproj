@@ -260,6 +260,8 @@
     <Compile Include="Controllers\CobrosController.cs" />
     <Compile Include="Controllers\Dropdown.cs" />
     <Compile Include="Controllers\EmpleadoController.cs" />
+    <Compile Include="Controllers\GestionarCasasController.cs" />
+    <Compile Include="Controllers\GestionarServiciosController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\UsuarioController.cs" />
     <Compile Include="Global.asax.cs">
@@ -360,6 +362,8 @@
     <Content Include="Views\Empleado\Crear.cshtml" />
     <Content Include="Views\Cobros\Detalle.cshtml" />
     <Content Include="Views\Usuario\Crear.cshtml" />
+    <Content Include="Views\GestionarServicios\Index.cshtml" />
+    <Content Include="Views\GestionarCasas\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

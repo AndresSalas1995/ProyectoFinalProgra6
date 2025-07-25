@@ -1,0 +1,44 @@
+﻿@model List<DataModels.PviProyectoFinalDBStoredProcedures.SpConsultarCasasResult>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Gestionar Casas</h2>
+
+@*Boton de agregar un nuevo servicio*@
+<div class="mb-3 text-end">
+    @Html.ActionLink("Nuevo Casa", "Crear", "GestionarCasas", null, new { @class = "btn btn-success" })
+</div>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Nombre de la casa</th>
+            <th>Mts Cuadrados</th>
+            <th>Núm. Habitaciones</th>
+            <th>Núm. Baños</th>
+            <th># Propietario</th>
+            <th>Fecha Construcción</th>
+            <th>Estado</th>
+            <th>Consultar</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (DataModels.PviProyectoFinalDBStoredProcedures.SpConsultarCasasResult item in this.Model)
+        {
+            <tr>
+                <td>@item.Nombre_casa</td>
+                <td>@item.Metros_cuadrados</td>
+                <td>@item.Numero_habitaciones</td>
+                <td>@item.Numero_banos</td>
+                <td>@item.Propietario</td>
+                <td>@item.Fecha_construccion.ToString("MM-dd-yyyy")</td>
+                <td>@item.Estado</td>
+                <td>
+                    @Html.ActionLink("Consultar", "Detalle", "GestionarCasas", new { id = item.Id_casa }, new { @class = "btn btn-info btn-sm" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

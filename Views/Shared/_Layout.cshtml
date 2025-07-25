@@ -19,6 +19,8 @@
                     @if (Session["es_empleado"] != null && (int)Session["es_empleado"] == 1)
                     {
                         <li>@Html.ActionLink("Consultar Cobros", "Index", "Empleado", null, new { @class = "nav-link" })</li>
+                        <li>@Html.ActionLink("Gestionar Servicios", "Index", "GestionarServicios", null, new { @class = "nav-link" })</li>
+                        <li>@Html.ActionLink("Gestionar Casas", "Index", "GestionarCasas", null, new { @class = "nav-link" })</li>
                     }
 
                     @if (Session["id_persona"] != null)

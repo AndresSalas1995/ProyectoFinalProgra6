@@ -328,6 +328,28 @@ namespace DataModels
 
 		#endregion
 
+		#region SpConsultarCasas
+
+		public static IEnumerable<SpConsultarCasasResult> SpConsultarCasas(this PviProyectoFinalDB dataConnection)
+		{
+			return dataConnection.QueryProc<SpConsultarCasasResult>("[dbo].[sp_ConsultarCasas]");
+		}
+
+		public partial class SpConsultarCasasResult
+		{
+			[Column("id_casa")            ] public int      Id_casa             { get; set; }
+			[Column("nombre_casa")        ] public string   Nombre_casa         { get; set; }
+			[Column("metros_cuadrados")   ] public int      Metros_cuadrados    { get; set; }
+			[Column("numero_habitaciones")] public int      Numero_habitaciones { get; set; }
+			[Column("numero_banos")       ] public int      Numero_banos        { get; set; }
+			[Column("precio")             ] public decimal  Precio              { get; set; }
+			[Column("fecha_construccion") ] public DateTime Fecha_construccion  { get; set; }
+			[Column("propietario")        ] public string   Propietario         { get; set; }
+			[Column("estado")             ] public string   Estado              { get; set; }
+		}
+
+		#endregion
+
 		#region SpConsultarCobro
 
 		public static IEnumerable<SpConsultarCobroResult> SpConsultarCobro(this PviProyectoFinalDB dataConnection)
@@ -392,6 +414,25 @@ namespace DataModels
 			[Column("estado")           ] public string    Estado            { get; set; }
 			[Column("fecha_cancelacion")] public DateTime? Fecha_cancelacion { get; set; }
 			[Column("monto")            ] public decimal   Monto             { get; set; }
+		}
+
+		#endregion
+
+		#region SpConsultarServicios
+
+		public static IEnumerable<SpConsultarServiciosResult> SpConsultarServicios(this PviProyectoFinalDB dataConnection)
+		{
+			return dataConnection.QueryProc<SpConsultarServiciosResult>("[dbo].[sp_ConsultarServicios]");
+		}
+
+		public partial class SpConsultarServiciosResult
+		{
+			[Column("id_servicio")     ] public int     Id_servicio      { get; set; }
+			[Column("nombre_servicio") ] public string  Nombre_servicio  { get; set; }
+			[Column("descripcion")     ] public string  Descripcion      { get; set; }
+			[Column("precio")          ] public decimal Precio           { get; set; }
+			[Column("nombre_categoria")] public string  Nombre_categoria { get; set; }
+			[Column("estado")          ] public string  Estado           { get; set; }
 		}
 
 		#endregion
