@@ -50,14 +50,18 @@
 </ul>
 
 @*Botones de acción*@
+@* Mostrar botones solo si el usuario es empleado y el cobro está pendiente *@
 <div class="mb-3">
-    @if (Model.Detalle.Estado == "Pendiente")
+    @if (
+        Model.Detalle.Estado == "Pendiente" &&
+        Session["es_empleado"] != null &&
+        Convert.ToInt32(Session["es_empleado"]) == 1
+    )
     {
         <a href="@Url.Action("Editar", "Cobros", new { id = Model.Detalle.Id_cobro })" class="btn btn-primary">Editar</a>
         <a href="@Url.Action("Pagar", "Cobros", new { id = Model.Detalle.Id_cobro })" class="btn btn-success">Pagar</a>
         <a href="@Url.Action("Eliminar", "Cobros", new { id = Model.Detalle.Id_cobro })" class="btn btn-danger" onclick="return confirm('¿Está seguro de eliminar este cobro?');">Eliminar</a>
     }
-
 </div>
 
 @*Bitácora de acciones*@
