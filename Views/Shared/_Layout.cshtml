@@ -26,13 +26,16 @@
                     @if (Session["id_persona"] != null)
                     {
                         <li>@Html.ActionLink("Mis Cobros", "Index", "Usuario", null, new { @class = "nav-link" })</li>
-                        <li>@Html.ActionLink("Cerrar Sesión", "CerrarSession", "Autenticacion", null, new { @class = "nav-link" })</li>
                     }
                 </ul>
                 <div class="text-white text-end">
                     @if (Session["nombre_completo"] != null)
                     {
                         <span>Bienvenido/a, @Session["nombre_completo"]</span>
+                        if (Session["id_persona"] != null)
+                        {
+                            <span>@Html.ActionLink("Cerrar Sesión", "CerrarSession", "Autenticacion", null, new { @class = "nav-link" })</span>
+                        }
                     }
                 </div>
             </div>
