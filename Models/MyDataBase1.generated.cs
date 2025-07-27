@@ -598,6 +598,20 @@ namespace DataModels
 
 		#endregion
 
+		#region SpInactivarServicio
+
+		public static int SpInactivarServicio(this PviProyectoFinalDB dataConnection, int? @IdServicio)
+		{
+			var parameters = new []
+			{
+				new DataParameter("@IdServicio", @IdServicio, LinqToDB.DataType.Int32)
+			};
+
+			return dataConnection.ExecuteProc("[dbo].[SpInactivarServicio]", parameters);
+		}
+
+		#endregion
+
 		#region SpInsertarCobroCompleto
 
 		public static int SpInsertarCobroCompleto(this PviProyectoFinalDB dataConnection, int? @idCasa, int? @mes, int? @anno, int? @idUser, DataTable @serviciosSeleccionados)

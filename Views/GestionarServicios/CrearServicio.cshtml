@@ -30,10 +30,17 @@
             <option value="">Seleccione una opcion</option>
         </select>
     </div>
-    <hr />
     <input type="submit" class="btn btn-primary" value="Guardar" />
     <a href="~/GestionarServicios/Index" class="btn btn-dark">Regresar</a>
 </form>
+@if (ViewBag.EsConsulta == true)
+{
+    using (Html.BeginForm("InactivarServicio", "GestionarServicios", FormMethod.Post))
+    {
+        @Html.HiddenFor(model => model.Id)
+        <button type="submit" class="btn btn-danger">Inactivar</button>
+    }
+}
 <br />
 @if (this.Model != null && ViewBag.mensaje != null)
 {
@@ -41,6 +48,8 @@
         @ViewBag.mensaje
     </div>
 }
+
+
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

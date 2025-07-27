@@ -1,0 +1,10 @@
+﻿@{
+    ViewBag.Title = "Servicio Inactivado";
+}
+
+<div class="alert alert-success">
+    <h4>Servicio inactivado exitosamente</h4>
+    <p>El servicio con ID <strong>@ViewBag.IdServicio</strong> ha sido desactivado exitosamente.</p>
+</div>
+
+<a href="@Url.Action("Index", "GestionarServicios")" class="btn btn-primary">Regresar</a>

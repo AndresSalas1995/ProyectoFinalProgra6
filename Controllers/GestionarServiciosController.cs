@@ -38,17 +38,30 @@ namespace ProyectoFinalPogragamacionVI.Models
                 {
                     using (var db = new PviProyectoFinalDB("MyDatabase"))
                     {
-                        servicio = db.SpLeerServicioPorId(id).Select(s => new Servicios
-                        {
-                            Id = s.Id_servicio,
-                            nombre = s.Nombre,
-                            descripcion = s.Descripcion,
-                            precio = s.Precio,
-                            categoria = s.Nombre_categoria,
-                            categoriaId = s.Id_categoria,
-                        }).FirstOrDefault();
 
+                        var resultado = db.SpLeerServicioPorId(id).FirstOrDefault();
+
+                        // Verificar si el servicio esta inactivo
+                        if ( resultado.Estado == false)
+                        {
+                            return RedirectToAction("ServicioInactivo", new { id = id });
+                        }
+
+                        servicio = new Servicios
+                        {
+                            Id = resultado.Id_servicio,
+                            nombre = resultado.Nombre,
+                            descripcion = resultado.Descripcion,
+                            precio = resultado.Precio,
+                            categoria = resultado.Nombre_categoria,
+                            categoriaId = resultado.Id_categoria,
+                        };
                     }
+                    ViewBag.EsConsulta = true; //No muestra si es consulta o no
+                }
+                else
+                {
+                    ViewBag.EsConsulta = false; //Nuevo servicio
                 }
             }
                 
@@ -61,26 +74,73 @@ namespace ProyectoFinalPogragamacionVI.Models
             return View(servicio);
         }
 
+        //Para crear la vista de servicio inactivo
+        public ActionResult ServicioInactivo(int? id)
+        {
+            ViewBag.IdServicio = id;
+            return View();
+        }
+
         [HttpPost]
         public ActionResult CrearServicio(Servicios servicio)
         {
             string mensaje = "";
-            bool estado = true;
                 try
                 {
-                    using (var db = new PviProyectoFinalDB("MyDatabase"))
+                using (var db = new PviProyectoFinalDB("MyDatabase"))
+                {
+                    var existe = db.SpLeerServicioPorId(servicio.Id).FirstOrDefault();
+
+                    if (existe != null)
                     {
+                        mensaje = "Este Servicio ya existe";
+                        ModelState.AddModelError("", mensaje);
+                        ViewBag.EsConsulta = true;
+                    }
+                    else
+                    {
+                        bool estado = true;
                         db.SpAgregarServicio(servicio.nombre, servicio.descripcion, servicio.precio, servicio.categoriaId, estado);
-                        mensaje = "Se ha insertado correctamente el jugador";
+                        mensaje = "Se ha insertado correctamente el servicio";
+                        ViewBag.EsConsulta = false;
                     }
                 }
+            }
                 catch (Exception ex)
                 {
-                    mensaje = "No se ha insertado correctamente el jugador";
+                    mensaje = "No se ha insertado correctamente el servicio";
                 }
             ViewBag.mensaje = mensaje;
             return View(servicio);
 
+        }
+
+        //Accion para inactivar un servicio
+        [HttpPost]
+        public ActionResult InactivarServicio(int id)
+        {
+            string mensaje = "";
+            try
+            {
+                using (var db = new PviProyectoFinalDB("MyDatabase"))
+                {
+                    db.SpInactivarServicio(id);
+                }
+                // Redirijo a la vista de que el serviicio fue inactivado exitosamente
+                return RedirectToAction("ServicioInactivoExitosamente", new { id = id });
+            }
+            catch (Exception ex)
+            {
+                mensaje = "Ocurrió un error al inactivar el servicio: " + ex.Message;
+                return RedirectToAction("Index");
+            }
+        }
+
+        //Vista de servicio inactivo exisotamente
+        public ActionResult ServicioInactivoExitosamente(int? id)
+        {
+            ViewBag.IdServicio = id;
+            return View();
         }
 
         //cargar dropdown de categorias

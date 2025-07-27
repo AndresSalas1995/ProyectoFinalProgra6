@@ -366,6 +366,8 @@
     <Content Include="Views\GestionarServicios\Index.cshtml" />
     <Content Include="Views\GestionarCasas\Index.cshtml" />
     <Content Include="Views\GestionarServicios\CrearServicio.cshtml" />
+    <Content Include="Views\GestionarServicios\ServicioInactivo.cshtml" />
+    <Content Include="Views\GestionarServicios\ServicioInactivoExitosamente.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
