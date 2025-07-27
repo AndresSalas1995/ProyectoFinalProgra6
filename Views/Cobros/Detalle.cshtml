@@ -51,9 +51,10 @@
 
 @*Botones de acción*@
 @* Mostrar botones solo si el usuario es empleado y el cobro está pendiente *@
+@*El String comparison es para ignorar mayusculas y minusculas*@
 <div class="mb-3">
     @if (
-        Model.Detalle.Estado == "Pendiente" &&
+        Model.Detalle.Estado.Equals("Pendiente", StringComparison.OrdinalIgnoreCase) &&
         Session["es_empleado"] != null &&
         Convert.ToInt32(Session["es_empleado"]) == 1
     )

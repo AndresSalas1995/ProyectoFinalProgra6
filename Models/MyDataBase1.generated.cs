@@ -283,6 +283,30 @@ namespace DataModels
 
 	public static partial class PviProyectoFinalDBStoredProcedures
 	{
+		#region SpAgregarServicio
+
+		public static int SpAgregarServicio(this PviProyectoFinalDB dataConnection, string @Nombre, string @Descripcion, decimal? @Precio, int? @IdCategoria, bool? @Estado)
+		{
+			var parameters = new []
+			{
+				new DataParameter("@Nombre",      @Nombre,      LinqToDB.DataType.VarChar)
+				{
+					Size = 100
+				},
+				new DataParameter("@Descripcion", @Descripcion, LinqToDB.DataType.Text)
+				{
+					Size = 2147483647
+				},
+				new DataParameter("@Precio",      @Precio,      LinqToDB.DataType.Decimal),
+				new DataParameter("@IdCategoria", @IdCategoria, LinqToDB.DataType.Int32),
+				new DataParameter("@Estado",      @Estado,      LinqToDB.DataType.Boolean)
+			};
+
+			return dataConnection.ExecuteProc("[dbo].[sp_AgregarServicio]", parameters);
+		}
+
+		#endregion
+
 		#region SpAlterdiagram
 
 		public static int SpAlterdiagram(this PviProyectoFinalDB dataConnection, string @diagramname, int? @ownerId, int? @version, byte[] @definition)
@@ -595,6 +619,31 @@ namespace DataModels
 
 		#endregion
 
+		#region SpLeerServicioPorId
+
+		public static IEnumerable<SpLeerServicioPorIdResult> SpLeerServicioPorId(this PviProyectoFinalDB dataConnection, int? @IdServicio)
+		{
+			var parameters = new []
+			{
+				new DataParameter("@IdServicio", @IdServicio, LinqToDB.DataType.Int32)
+			};
+
+			return dataConnection.QueryProc<SpLeerServicioPorIdResult>("[dbo].[sp_LeerServicioPorId]", parameters);
+		}
+
+		public partial class SpLeerServicioPorIdResult
+		{
+			[Column("id_servicio")     ] public int     Id_servicio      { get; set; }
+			[Column("nombre")          ] public string  Nombre           { get; set; }
+			[Column("descripcion")     ] public string  Descripcion      { get; set; }
+			[Column("precio")          ] public decimal Precio           { get; set; }
+			[Column("id_categoria")    ] public int     Id_categoria     { get; set; }
+			[Column("nombre_categoria")] public string  Nombre_categoria { get; set; }
+			[Column("estado")          ] public bool    Estado           { get; set; }
+		}
+
+		#endregion
+
 		#region SpLoginUsuario
 
 		public static IEnumerable<SpLoginUsuarioResult> SpLoginUsuario(this PviProyectoFinalDB dataConnection, string @Email, string @Contrasena)
@@ -640,6 +689,21 @@ namespace DataModels
 		{
 			[Column("id_casa")    ] public int    Id_casa     { get; set; }
 			[Column("nombre_casa")] public string Nombre_casa { get; set; }
+		}
+
+		#endregion
+
+		#region SpObtenerCategorias
+
+		public static IEnumerable<SpObtenerCategoriasResult> SpObtenerCategorias(this PviProyectoFinalDB dataConnection)
+		{
+			return dataConnection.QueryProc<SpObtenerCategoriasResult>("[dbo].[sp_ObtenerCategorias]");
+		}
+
+		public partial class SpObtenerCategoriasResult
+		{
+			[Column("id_categoria")] public int    Id_categoria { get; set; }
+			[Column("nombre")      ] public string Nombre       { get; set; }
 		}
 
 		#endregion

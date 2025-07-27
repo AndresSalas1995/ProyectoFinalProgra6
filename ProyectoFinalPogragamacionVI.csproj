@@ -277,6 +277,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>MyDataBase.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Servicios.cs" />
     <Compile Include="Models\SpLoginUsuario_Result.cs" />
     <Compile Include="Permisos\AutorizarEmpleadoAttribute.cs" />
     <Compile Include="Permisos\ValidarSessionAttribute.cs" />
@@ -364,6 +365,7 @@
     <Content Include="Views\Usuario\Crear.cshtml" />
     <Content Include="Views\GestionarServicios\Index.cshtml" />
     <Content Include="Views\GestionarCasas\Index.cshtml" />
+    <Content Include="Views\GestionarServicios\CrearServicio.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

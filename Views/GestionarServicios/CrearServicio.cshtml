@@ -1,0 +1,94 @@
+﻿@model ProyectoFinalPogragamacionVI.Models.Servicios
+
+@{
+    ViewBag.Title = "Crear Servicios";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<form method="post" id="myform" class="form">
+    @Html.HiddenFor(_ => _.Id)
+
+    <div class="mb-3">
+        <label for="Nombre" class="form-label">Nombre:</label>
+        @Html.TextBoxFor(_ => _.nombre, new { placeholder = "Nombre", @class = "form-control" })
+    </div>
+    <div class="mb-3">
+        <label for="Descripcion" class="form-label">Descripcion:</label>
+        @Html.TextBoxFor(_ => _.descripcion, new { placeholder = "Posicion", @class = "form-control" })
+    </div>
+    <div class="mb-3">
+        <label for="Precio" class="form-label">Precio:</label>
+        @Html.TextBox("precio",
+            Model.precio.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture),
+            new { @class = "form-control", type = "number", step = "0.01", min = "0.01" })
+    </div>
+
+    <div class="mb-3">
+        <label for="categoriaId" class="form-label">Categoria:</label>
+        <select id="categoriaId" name="categoriaId" class="form-control">
+            <option value="">Seleccione una opcion</option>
+        </select>
+    </div>
+    <hr />
+    <input type="submit" class="btn btn-primary" value="Guardar" />
+    <a href="~/GestionarServicios/Index" class="btn btn-dark">Regresar</a>
+</form>
+<br />
+@if (this.Model != null && ViewBag.mensaje != null)
+{
+    <div class="alert alert-success" role="alert">
+        @ViewBag.mensaje
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/validacionesGenericas.js"></script>
+    <script type="text/javascript">
+        $("#myform").validate({
+            rules: {
+                'nombre': { required: true, maxlength: 250 },
+                'descripcion': { required: true, maxlength: 250 },
+                'precio': { required: true, number: true, min: 0.01 }
+            },
+            messages: {
+                'nombre': {
+                    required: "El nombre es obligatorio",
+                    maxlength: "Máximo 250 caracteres"
+                },
+                'descripcion': {
+                    required: "La descripción es obligatoria",
+                    maxlength: "Máximo 250 caracteres"
+                },
+                'precio': {
+                    required: "El precio es obligatorio",
+                    number: "Debe ser un número valido",
+                    min: "El precio debe ser mayor o igual a 0"
+                }
+            }
+        });
+
+        function cleanDropdown(ddl) {
+            ddl.empty();
+            ddl.append("<option value=''>Seleccione una opcion</option>");
+        };
+
+        function loadDropdown(url, parametros, ddl, selected) {
+            $.post(url, parametros, function (data) {
+                cleanDropdown(ddl);
+                $(data).each(function () {
+                    var option = new Option(this.Nombre, this.Id);
+                    if (this.Id == selected) {
+                        option.selected = true;
+                    }
+                    ddl.append(option);
+                });
+            });
+        };
+
+        $(document).ready(function () {
+            loadDropdown("/GestionarServicios/CargarCategorias", {}, $("#categoriaId"), @Model.categoriaId);
+        });
+    </script>
+}
