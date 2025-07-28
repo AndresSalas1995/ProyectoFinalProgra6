@@ -283,6 +283,29 @@ namespace DataModels
 
 	public static partial class PviProyectoFinalDBStoredProcedures
 	{
+		#region SpActualizarCasa
+
+		public static int SpActualizarCasa(this PviProyectoFinalDB dataConnection, int? @IdCasa, string @NombreCasa, int? @MetrosCuadrados, int? @NumeroHabitaciones, int? @NumeroBanos, DateTime? @FechaConstruccion, int? @IdPersona)
+		{
+			var parameters = new []
+			{
+				new DataParameter("@IdCasa",              @IdCasa,             LinqToDB.DataType.Int32),
+				new DataParameter("@Nombre_Casa",         @NombreCasa,         LinqToDB.DataType.NVarChar)
+				{
+					Size = 255
+				},
+				new DataParameter("@Metros_Cuadrados",    @MetrosCuadrados,    LinqToDB.DataType.Int32),
+				new DataParameter("@Numero_Habitaciones", @NumeroHabitaciones, LinqToDB.DataType.Int32),
+				new DataParameter("@Numero_Banos",        @NumeroBanos,        LinqToDB.DataType.Int32),
+				new DataParameter("@Fecha_Construccion",  @FechaConstruccion,  LinqToDB.DataType.Date),
+				new DataParameter("@Id_Persona",          @IdPersona,          LinqToDB.DataType.Int32)
+			};
+
+			return dataConnection.ExecuteProc("[dbo].[SpActualizarCasa]", parameters);
+		}
+
+		#endregion
+
 		#region SpActualizarServicio
 
 		public static int SpActualizarServicio(this PviProyectoFinalDB dataConnection, int? @IdServicio, string @Nombre, string @Descripcion, decimal? @Precio, int? @IdCategoria)
@@ -303,6 +326,29 @@ namespace DataModels
 			};
 
 			return dataConnection.ExecuteProc("[dbo].[SpActualizarServicio]", parameters);
+		}
+
+		#endregion
+
+		#region SpAgregarCasa
+
+		public static int SpAgregarCasa(this PviProyectoFinalDB dataConnection, string @nombreCasa, int? @metrosCuadrados, int? @numeroHabitaciones, int? @numeroBanos, int? @idPersona, DateTime? @fechaConstruccion, bool? @estado)
+		{
+			var parameters = new []
+			{
+				new DataParameter("@nombre_casa",         @nombreCasa,         LinqToDB.DataType.NVarChar)
+				{
+					Size = 255
+				},
+				new DataParameter("@metros_cuadrados",    @metrosCuadrados,    LinqToDB.DataType.Int32),
+				new DataParameter("@numero_habitaciones", @numeroHabitaciones, LinqToDB.DataType.Int32),
+				new DataParameter("@numero_banos",        @numeroBanos,        LinqToDB.DataType.Int32),
+				new DataParameter("@id_persona",          @idPersona,          LinqToDB.DataType.Int32),
+				new DataParameter("@fecha_construccion",  @fechaConstruccion,  LinqToDB.DataType.Date),
+				new DataParameter("@estado",              @estado,             LinqToDB.DataType.Boolean)
+			};
+
+			return dataConnection.ExecuteProc("[dbo].[SpAgregarCasa]", parameters);
 		}
 
 		#endregion
@@ -622,6 +668,20 @@ namespace DataModels
 
 		#endregion
 
+		#region SpInactivarCasa
+
+		public static int SpInactivarCasa(this PviProyectoFinalDB dataConnection, int? @IdCasa)
+		{
+			var parameters = new []
+			{
+				new DataParameter("@IdCasa", @IdCasa, LinqToDB.DataType.Int32)
+			};
+
+			return dataConnection.ExecuteProc("[dbo].[SpInactivarCasa]", parameters);
+		}
+
+		#endregion
+
 		#region SpInactivarServicio
 
 		public static int SpInactivarServicio(this PviProyectoFinalDB dataConnection, int? @IdServicio)
@@ -707,6 +767,34 @@ namespace DataModels
 			[Column("id_persona")     ] public int?   Id_persona      { get; set; }
 			[Column("nombre_completo")] public string Nombre_completo { get; set; }
 			[Column("es_empleado")    ] public int    Es_empleado     { get; set; }
+		}
+
+		#endregion
+
+		#region SpObtenerCasaPorId
+
+		public static IEnumerable<SpObtenerCasaPorIdResult> SpObtenerCasaPorId(this PviProyectoFinalDB dataConnection, int? @IdCasa)
+		{
+			var parameters = new []
+			{
+				new DataParameter("@IdCasa", @IdCasa, LinqToDB.DataType.Int32)
+			};
+
+			return dataConnection.QueryProc<SpObtenerCasaPorIdResult>("[dbo].[SpObtenerCasaPorId]", parameters);
+		}
+
+		public partial class SpObtenerCasaPorIdResult
+		{
+			[Column("id_casa")            ] public int      Id_casa             { get; set; }
+			[Column("nombre_casa")        ] public string   Nombre_casa         { get; set; }
+			[Column("metros_cuadrados")   ] public int      Metros_cuadrados    { get; set; }
+			[Column("numero_habitaciones")] public int      Numero_habitaciones { get; set; }
+			[Column("numero_banos")       ] public int      Numero_banos        { get; set; }
+			[Column("precio")             ] public decimal  Precio              { get; set; }
+			[Column("id_persona")         ] public int      Id_persona          { get; set; }
+			[Column("nombre_propietario") ] public string   Nombre_propietario  { get; set; }
+			[Column("fecha_construccion") ] public DateTime Fecha_construccion  { get; set; }
+			[Column("estado")             ] public bool     Estado              { get; set; }
 		}
 
 		#endregion

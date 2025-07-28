@@ -267,6 +267,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Casas.cs" />
     <Compile Include="Models\Cobros.cs" />
     <Compile Include="Models\ConsultarCobro.cs" />
     <Compile Include="Models\ConsultarCobroUsuario.cs" />
@@ -368,6 +369,7 @@
     <Content Include="Views\GestionarServicios\CrearServicio.cshtml" />
     <Content Include="Views\GestionarServicios\ServicioInactivo.cshtml" />
     <Content Include="Views\GestionarServicios\ServicioInactivoExitosamente.cshtml" />
+    <Content Include="Views\GestionarCasas\CrearCasa.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
