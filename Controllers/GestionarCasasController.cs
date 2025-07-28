@@ -46,9 +46,21 @@ namespace ProyectoFinalPogragamacionVI.Controllers
             {
                 using (var db = new PviProyectoFinalDB("MyDatabase"))
                 {
+                    // Validar si ya existe una casa con ese nombre (ignorar mayúsculas/minúsculas)
+                    bool existe = db.SpConsultarCasas()
+                        .Any(c => c.Nombre_casa.ToLower() == casa.Nombre.ToLower());
+
+                    if (existe)
+                    {
+                        ModelState.AddModelError("Nombre", "Ya existe una casa con ese nombre.");
+                        ViewBag.EsConsulta = false;
+                        return View(casa); // Retorna la vista con el error para corregir
+                    }
+
                     bool estado = true;
                     db.SpAgregarCasa(casa.Nombre, casa.metros, casa.numHabitaciones, casa.numBanos,
                         casa.idCliente, casa.FechaConstruccion, estado);
+
                     mensaje = "Casa creada correctamente";
                 }
             }

@@ -23,6 +23,7 @@
     <div class="mb-3">
         <label class="form-label">Casa</label>
         @Html.TextBoxFor(_ => _.Nombre, atributosNombre)
+        @Html.ValidationMessageFor(m => m.Nombre, "", new { @class = "text-danger" })
     </div>
 
     @{
@@ -97,28 +98,99 @@
         <a href="~/GestionarCasas/Index" class="btn btn-dark">Regresar</a>
     </div>
 </form>
-    @* Boton de inactivar casa *@
-    @if (esEdicion)
+@* Boton de inactivar casa *@
+@if (esEdicion)
+{
+    <br />
+    using (Html.BeginForm("InactivarCasa", "GestionarCasas", FormMethod.Post))
     {
-        <br />
-        using (Html.BeginForm("InactivarCasa", "GestionarCasas", FormMethod.Post))
-        {
-            @Html.HiddenFor(m => m.Id)
-            <button type="submit" class="btn btn-danger">Inactivar</button>
-        }
+        @Html.HiddenFor(m => m.Id)
+        <button type="submit" class="btn btn-danger">Inactivar</button>
     }
+}
 
-    @if (ViewBag.mensaje != null)
-    {
-        <br />
-        <div class="alert alert-info" role="alert">
-            @ViewBag.mensaje
-        </div>
-    }
+@if (ViewBag.mensaje != null)
+{
+    <br />
+    <div class="alert alert-info" role="alert">
+        @ViewBag.mensaje
+    </div>
+}
 
-    @section Scripts {
-        @Scripts.Render("~/bundles/jqueryval")
-        <script>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/validacionesGenericas.js"></script>
+    <script type="text/javascript">
+
+        // Reglas de validación personalizadas
+        $("#myform").validate({
+            rules: {
+                'Nombre': {
+                    required: true,
+                    maxlength: 50,
+                    pattern: /^[a-zA-Z0-9\s]+$/
+                },
+                'metros': {
+                    required: true,
+                    number: true,
+                    min: 0.01,
+                    step: 0.01
+                },
+                'numHabitaciones': {
+                    required: true,
+                    digits: true,
+                    min: 1,
+                    max: 8
+                },
+                'numBanos': {
+                    required: true,
+                    digits: true,
+                    min: 1,
+                    max: 4
+                },
+                'FechaConstruccion': {
+                    required: true,
+                    date: true
+                },
+                'idCliente': {
+                    required: true
+                }
+            },
+            messages: {
+                'Nombre': {
+                    required: "El nombre es obligatorio",
+                    maxlength: "Máximo 50 caracteres",
+                    pattern: "Solo se permiten letras, números y espacios"
+                },
+                'metros': {
+                    required: "Los metros cuadrados son obligatorios",
+                    number: "Debe ser un número válido",
+                    min: "Debe ser mayor a 0",
+                    step: "Máximo dos decimales"
+                },
+                'numHabitaciones': {
+                    required: "El número de habitaciones es obligatorio",
+                    digits: "Debe ser un número entero",
+                    min: "Debe ser al menos 1",
+                    max: "No puede ser mayor a 8"
+                },
+                'numBanos': {
+                    required: "El número de baños es obligatorio",
+                    digits: "Debe ser un número entero",
+                    min: "Debe ser al menos 1",
+                    max: "No puede ser mayor a 4"
+                },
+                'FechaConstruccion': {
+                    required: "La fecha de construcción es obligatoria",
+                    date: "Debe ser una fecha válida"
+                },
+                'idCliente': {
+                    required: "Debe seleccionar un cliente"
+                }
+            }
+        });
+
+        // Función para cargar clientes al dropdown
         function cargarClientes(selectedId) {
             $.get("/GestionarCasas/ObtenerClientesActivos", function (data) {
                 let ddl = $("#idCliente");
@@ -132,10 +204,9 @@
                 });
             });
         }
-
         $(document).ready(function () {
             cargarClientes(@Model.idCliente);
         });
-        </script>
-    }
+    </script>
+}
 
