@@ -6,6 +6,15 @@
 
 <h2>Gestionar Cobros</h2>
 
+@*imprimo mensajes usando TempData en caso que algunas validaciones no se cumplan, excelente tool*@
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        @TempData["Mensaje"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
 @*Filtro para empleados*@
 
 <form method="get" class="row g-3 mb-4">

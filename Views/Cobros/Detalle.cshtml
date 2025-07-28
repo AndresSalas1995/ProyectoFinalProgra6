@@ -4,106 +4,90 @@
     ViewBag.Title = "Detalle del Cobro";
 }
 
-<h2 class="mb-4">Detalle del Cobro</h2>
+<h2>Detalle del Cobro</h2>
 
-<div class="card mb-4">
-    <div class="card-header">
-        <strong>Información General</strong>
-    </div>
-    <div class="card-body p-3">
-        <table class="table table-sm mb-0">
-            <tbody>
-                <tr>
-                    <th scope="row">ID Cobro</th>
-                    <td>@Model.Detalle.Id_cobro</td>
-                </tr>
-                <tr>
-                    <th scope="row">Nombre de Casa</th>
-                    <td>@Model.Detalle.Nombre_casa</td>
-                </tr>
-                <tr>
-                    <th scope="row">Propietario</th>
-                    <td>@Model.Detalle.Nombre_cliente</td>
-                </tr>
-                <tr>
-                    <th scope="row">Mes</th>
-                    <td>@Model.Detalle.Mes</td>
-                </tr>
-                <tr>
-                    <th scope="row">Año</th>
-                    <td>@Model.Detalle.Año</td>
-                </tr>
-                <tr>
-                    <th scope="row">Estado</th>
-                    <td>@Model.Detalle.Estado</td>
-                </tr>
-                <tr>
-                    <th scope="row">Monto Cobro</th>
-                    <td>@Model.Detalle.Monto.ToString("C")</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+<table class="table">
+    <tr>
+        <th>ID Cobro</th>
+        <td>@Model.Detalle.Id_cobro</td>
+    </tr>
+    <tr>
+        <th>Nombre de Casa</th>
+        <td>@Model.Detalle.Nombre_casa</td>
+    </tr>
+    <tr>
+        <th>Propietario</th>
+        <td>@Model.Detalle.Nombre_cliente</td>
+    </tr>
+    <tr>
+        <th>Mes</th>
+        <td>@Model.Detalle.Mes</td>
+    </tr>
+    <tr>
+        <th>Año</th>
+        <td>@Model.Detalle.Año</td>
+    </tr>
+    <tr>
+        <th>Estado</th>
+        <td>@Model.Detalle.Estado</td>
+    </tr>
+    <tr>
+        <th>Monto Cobro</th>
+        <td>@Model.Detalle.Monto.ToString("C")</td>
+    </tr>
+</table>
+
+@*Servicios*@
+<h3>Servicios</h3>
+<ul>
+    @foreach (var servicio in Model.Servicios)
+    {
+        <li>
+            <input type="checkbox" disabled="disabled" @(servicio.Incluido ? "checked" : "") />
+            @servicio.Nombre
+        </li>
+    }
+</ul>
+
+@*Botones de acción*@
+@* Mostrar botones solo si el usuario es empleado y el cobro está pendiente *@
+@*El String comparison es para ignorar mayusculas y minusculas*@
+<div class="mb-3">
+    @if (
+        Model.Detalle.Estado.Equals("Pendiente", StringComparison.OrdinalIgnoreCase) &&
+        Session["es_empleado"] != null &&
+        Convert.ToInt32(Session["es_empleado"]) == 1
+    )
+    {
+        <a href="@Url.Action("Editar", "Cobros", new { id = Model.Detalle.Id_cobro })" class="btn btn-primary">Editar</a>
+        <a href="@Url.Action("Pagar", "Cobros", new { id = Model.Detalle.Id_cobro })" class="btn btn-success">Pagar</a>
+        <a href="@Url.Action("Eliminar", "Cobros", new { id = Model.Detalle.Id_cobro })" class="btn btn-danger" onclick="return confirm('¿Está seguro de eliminar este cobro?');">Eliminar</a>
+    }
 </div>
 
-<div class="card mb-4">
-    <div class="card-header">
-        <strong>Servicios</strong>
-    </div>
-    <div class="card-body p-3">
-        <ul class="list-group list-group-flush">
-            @foreach (var servicio in Model.Servicios)
-            {
-                <li class="list-group-item">
-                    <input type="checkbox" disabled="disabled" class="form-check-input me-2" @(servicio.Incluido ? "checked" : "") />
-                    @servicio.Nombre
-                </li>
-            }
-        </ul>
-    </div>
-</div>
+@*Bitácora de acciones*@
+<h3>Lista de acciones realizadas</h3>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Fecha</th>
+            <th>Acción</th>
+            <th>Detalle</th>
+            <th>Realizado por</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var log in Model.Bitacora)
+        {
+            <tr>
+                <td>@log.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
+                <td>@log.Accion</td>
+                <td>@log.Detalle</td>
+                <td>@log.RealizadoPor</td>
+            </tr>
+        }
+    </tbody>
+</table>
 
-@if (
-    Model.Detalle.Estado.Equals("Pendiente", StringComparison.OrdinalIgnoreCase) &&
-    Session["es_empleado"] != null &&
-    Convert.ToInt32(Session["es_empleado"]) == 1
-)
-{
-    <div class="mb-4">
-        <a href="@Url.Action("Editar", "Cobros", new { id = Model.Detalle.Id_cobro })" class="btn btn-primary me-2">Editar</a>
-        <a href="@Url.Action("Pagar", "Cobros", new { id = Model.Detalle.Id_cobro })" class="btn btn-success me-2">Pagar</a>
-        <a href="@Url.Action("Eliminar", "Cobros", new { id = Model.Detalle.Id_cobro })" class="btn btn-danger"
-           onclick="return confirm('¿Está seguro de eliminar este cobro?');">Eliminar</a>
-    </div>
-}
-<div class="card">
-    <div class="card-header">
-        <strong>Lista de acciones realizadas</strong>
-    </div>
-    <div class="card-body p-0">
-        <table class="table table-bordered mb-0">
-            <thead class="table-light">
-                <tr>
-                    <th>Fecha</th>
-                    <th>Acción</th>
-                    <th>Detalle</th>
-                    <th>Realizado por</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var log in Model.Bitacora)
-                {
-                    <tr>
-                        <td>@log.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
-                        <td>@log.Accion</td>
-                        <td>@log.Detalle</td>
-                        <td>@log.RealizadoPor</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-</div>
-
-<a href="@Url.Action("Index", "Empleado")" class="btn btn-dark mt-4">Regresar</a>
+<a href="@Url.Action("Index", "Empleado")" class="btn btn-dark">Regresar</a>
 

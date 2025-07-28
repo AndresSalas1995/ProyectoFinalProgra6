@@ -1,64 +1,53 @@
 ﻿@model ProyectoFinalPogragamacionVI.Models.EditarServiciosCobroViewModel
 
-<h2>Editar Servicios del Cobro</h2>
+<h2>Modificar cobro</h2>
 
-<div class="card mb-4">
-    <div class="card-header">
-        <strong>Información del Cobro</strong>
-    </div>
-    <div class="card-body">
-        <dl class="row mb-0">
-            <dt class="col-sm-3">Casa:</dt>
-            <dd class="col-sm-9">@Model.NombreCasa</dd>
-
-            <dt class="col-sm-3">Propietario:</dt>
-            <dd class="col-sm-9">@Model.NombreCliente</dd>
-
-            <dt class="col-sm-3">Mes:</dt>
-            <dd class="col-sm-9">@Model.Mes</dd>
-
-            <dt class="col-sm-3">Año:</dt>
-            <dd class="col-sm-9">@Model.Año</dd>
-
-            <dt class="col-sm-3">Monto:</dt>
-            <dd class="col-sm-9">@Model.Monto.ToString("C")</dd>
-        </dl>
-    </div>
-</div>
+<table class="table">
+    <tbody>
+        <tr>
+            <th>Casa</th>
+            <td>@Model.NombreCasa</td>
+        </tr>
+        <tr>
+            <th>Propietario</th>
+            <td>@Model.NombreCliente</td>
+        </tr>
+        <tr>
+            <th>Mes</th>
+            <td>@Model.Mes</td>
+        </tr>
+        <tr>
+            <th>Año</th>
+            <td>@Model.Año</td>
+        </tr>
+        <tr>
+            <th>Monto</th>
+            <td>@Model.Monto.ToString("C")</td>
+        </tr>
+    </tbody>
+</table>
 
 @using (Html.BeginForm())
 {
     @Html.HiddenFor(m => m.IdCobro)
 
-    <div class="card">
-        <div class="card-header">
-            <strong>Servicios</strong>
-        </div>
-        <div class="card-body">
-            <div class="row">
-                @for (int i = 0; i < Model.Servicios.Count; i++)
-                {
-                    <div class="col-md-4 mb-2">
-                        <div class="form-check">
-                            @Html.HiddenFor(m => m.Servicios[i].IdServicio)
-                            <input type="checkbox"
-                                   class="form-check-input"
-                                   id="servicio_@i"
-                                   name="Servicios[@i].Seleccionado"
-                                   value="true"
-                                   @(Model.Servicios[i].Seleccionado ? "checked" : "") />
-                            <label class="form-check-label" for="servicio_@i">@Model.Servicios[i].Nombre</label>
-                            @Html.Hidden("Servicios[" + i + "].Seleccionado", "false") @* Para enviar false si no está chequeado *@
-                        </div>
-                    </div>
-                }
-            </div>
-        </div>
-    </div>
+    <h3>Servicios</h3>
+    <ul>
+        @for (int i = 0; i < Model.Servicios.Count; i++)
+        {
+            <li>
+                @Html.HiddenFor(m => m.Servicios[i].IdServicio)
+                <input type="checkbox"
+                       name="Servicios[@i].Seleccionado"
+                       value="true"
+                       @(Model.Servicios[i].Seleccionado ? "checked" : "") />
+                @Html.DisplayFor(m => m.Servicios[i].Nombre)
+                @Html.Hidden("Servicios[" + i + "].Seleccionado", "false")  @* ERnviar false cuando no está chequeado *@
+            </li>
+        }
+    </ul>
 
-    <div class="mt-3">
-        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-        <a href="@Url.Action("Detalle", new { id = Model.IdCobro })" class="btn btn-secondary">Cancelar</a>
-    </div>
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <a href="@Url.Action("Detalle", new { id = Model.IdCobro })" class="btn btn-secondary">Regresar</a>
 }
 

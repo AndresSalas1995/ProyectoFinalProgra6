@@ -65,6 +65,23 @@ namespace ProyectoFinalPogragamacionVI.Controllers
                 if (detalle == null)
                     return HttpNotFound();
 
+                //Validación Estado pagado o eliminado
+                if (detalle.Estado.Equals("Pagado", StringComparison.OrdinalIgnoreCase) ||
+                    detalle.Estado.Equals("Eliminado", StringComparison.OrdinalIgnoreCase))
+                {
+                    TempData["Mensaje"] = "Este cobro no puede ser modificado porque está pagado o eliminado.";
+                    return RedirectToAction("Index", "Empleado");
+                }
+
+                //Periodo anterior o igual al actual
+                var fechaActual = DateTime.Now;
+                if (detalle.Año < fechaActual.Year ||
+                    (detalle.Año == fechaActual.Year && detalle.Mes <= fechaActual.Month))
+                {
+                    TempData["Mensaje"] = "Este cobro no puede ser editado porque pertenece a un periodo anterior o actual.";
+                    return RedirectToAction("Index", "Empleado");
+                }
+
                 var serviciosDb = db.SpConsultarServiciosPorCobroId(id).ToList();
                 var serviciosActivos = db.Servicios.Where(s => s.Estado == true).ToList();
 
