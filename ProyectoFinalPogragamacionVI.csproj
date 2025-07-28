@@ -370,6 +370,8 @@
     <Content Include="Views\GestionarServicios\ServicioInactivo.cshtml" />
     <Content Include="Views\GestionarServicios\ServicioInactivoExitosamente.cshtml" />
     <Content Include="Views\GestionarCasas\CrearCasa.cshtml" />
+    <Content Include="Views\GestionarCasas\CasaInactivo.cshtml" />
+    <Content Include="Views\GestionarCasas\CasaInactivoExitosamente.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

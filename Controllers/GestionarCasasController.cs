@@ -104,7 +104,7 @@ namespace ProyectoFinalPogragamacionVI.Controllers
                     FechaConstruccion = resultado.Fecha_construccion,
                 };
             }
-            ViewBag.EsConsulta = false;
+            ViewBag.EsConsulta = true;
             return View("CrearCasa", casa);
         }
         // POST: EditarCasa

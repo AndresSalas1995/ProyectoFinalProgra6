@@ -1,7 +1,7 @@
 ﻿@model ProyectoFinalPogragamacionVI.Models.Servicios
 
 @{
-    var esEdicion = ViewBag.EsConsulta == true;
+    bool esEdicion = Convert.ToBoolean(ViewBag.EsConsulta);
     ViewBag.Title = esEdicion ? "Editar Servicio" : "Crear Servicio";
 }
 
@@ -28,7 +28,7 @@
     </div>
     <div class="mb-3">
         <label for="Descripcion" class="form-label">Descripcion:</label>
-        @Html.TextBoxFor(_ => _.descripcion, new { placeholder = "Posicion", @class = "form-control" })
+        @Html.TextBoxFor(_ => _.descripcion, new { placeholder = "Descripcion", @class = "form-control" })
     </div>
     <div class="mb-3">
         <label for="Precio" class="form-label">Precio:</label>
@@ -48,7 +48,7 @@
         }
     </div>
     <div>
-        <input type="submit" class="btn btn-primary" value="@((esEdicion) ? "Guardar Cambios" : "Crear Servicio")" />
+        <input type="submit" class="btn btn-primary" value="@((esEdicion) ? "Guardar" : "Guardar")" />
         <a href="~/GestionarServicios/Index" class="btn btn-dark">Regresar</a>
     </div>
 </form>

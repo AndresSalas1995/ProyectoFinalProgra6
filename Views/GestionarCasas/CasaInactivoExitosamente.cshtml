@@ -1,0 +1,10 @@
+﻿@{
+    ViewBag.Title = "Casa Inactivado";
+}
+
+<div class="alert alert-success">
+    <h4>Casa inactivado exitosamente</h4>
+    <p>La casa con ID <strong>@ViewBag.IdCasa</strong> ha sido desactivado exitosamente.</p>
+</div>
+
+<a href="@Url.Action("Index", "GestionarCasas")" class="btn btn-primary">Regresar</a>

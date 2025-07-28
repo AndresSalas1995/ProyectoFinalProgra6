@@ -1,1 +1,141 @@
-﻿
+﻿@model ProyectoFinalPogragamacionVI.Models.Casas
+
+@{
+    bool esEdicion = Convert.ToBoolean(ViewBag.EsConsulta);
+    ViewBag.Title = esEdicion ? "Editar Casa" : "Crear Casa";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<form method="post" id="myform" class="form" action="@Url.Action(esEdicion ? "EditarCasa" : "CrearCasa", "GestionarCasas")">
+    @Html.HiddenFor(_ => _.Id)
+
+    @{
+        var atributosNombre = new Dictionary<string, object>{
+        { "placeholder", "Nombre de la casa" },
+        { "class", "form-control" }
+        };
+        if (esEdicion)
+        {
+            atributosNombre.Add("readonly", "readonly");
+        }
+    }
+    <div class="mb-3">
+        <label class="form-label">Casa</label>
+        @Html.TextBoxFor(_ => _.Nombre, atributosNombre)
+    </div>
+
+    @{
+        var atributosMetros = new Dictionary<string, object>
+{
+        { "class", "form-control" },
+        { "type", "number" },
+        { "placeholder", "0" }
+    };
+        if (esEdicion)
+        {
+            atributosMetros.Add("readonly", "readonly");
+        }
+    }
+    <div class="mb-3">
+        <label class="form-label">Metros cuadrados</label>
+        @Html.TextBoxFor(_ => _.metros, atributosMetros)
+    </div>
+
+
+    <div class="mb-3">
+        <label class="form-label">Número de habitaciones</label>
+        @Html.TextBoxFor(_ => _.numHabitaciones, new
+        {
+            @class = "form-control",
+            placeholder = "0",
+            type = "number",
+        })
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Número de baños</label>
+        @Html.TextBoxFor(m => m.numBanos, new
+        {
+            @class = "form-control",
+            placeholder = "0",
+            type = "number",
+        })
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Cliente</label>
+        <select id="idCliente" name="idCliente" class="form-control" @(esEdicion ? "disabled" : "")>
+            <option value="">Seleccione un cliente</option>
+        </select>
+        @* Campo oculto para que el valor de cliente se envíe aunque el select esté deshabilitado *@
+        @if (esEdicion)
+        {
+            @Html.HiddenFor(_ => _.idCliente)
+        }
+    </div>
+
+    @{
+        var atributosFecha = new Dictionary<string, object>
+{
+        { "class", "form-control" },
+        { "type", "date" }
+    };
+        if (esEdicion)
+        {
+            atributosFecha.Add("readonly", "readonly");
+        }
+    }
+    <div class="mb-3">
+        <label class="form-label">Fecha construcción</label>
+        @Html.TextBox("FechaConstruccion", Model.FechaConstruccion.ToString("yyyy-MM-dd"), atributosFecha)
+    </div>
+
+
+    <div>
+        <input type="submit" value="@(esEdicion ? "Guardar" : "Guardar")" class="btn btn-primary" />
+        <a href="~/GestionarCasas/Index" class="btn btn-dark">Regresar</a>
+    </div>
+</form>
+    @* Boton de inactivar casa *@
+    @if (esEdicion)
+    {
+        <br />
+        using (Html.BeginForm("InactivarCasa", "GestionarCasas", FormMethod.Post))
+        {
+            @Html.HiddenFor(m => m.Id)
+            <button type="submit" class="btn btn-danger">Inactivar</button>
+        }
+    }
+
+    @if (ViewBag.mensaje != null)
+    {
+        <br />
+        <div class="alert alert-info" role="alert">
+            @ViewBag.mensaje
+        </div>
+    }
+
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+        <script>
+        function cargarClientes(selectedId) {
+            $.get("/GestionarCasas/ObtenerClientesActivos", function (data) {
+                let ddl = $("#idCliente");
+                ddl.empty().append("<option value=''>Seleccione una opción</option>");
+                $.each(data, function (i, item) {
+                    let option = new Option(item.Nombre, item.Id);
+                    if (item.Id == selectedId) {
+                        option.selected = true;
+                    }
+                    ddl.append(option);
+                });
+            });
+        }
+
+        $(document).ready(function () {
+            cargarClientes(@Model.idCliente);
+        });
+        </script>
+    }
+
