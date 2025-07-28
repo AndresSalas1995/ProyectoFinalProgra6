@@ -306,6 +306,25 @@ namespace DataModels
 
 		#endregion
 
+		#region SpActualizarCobroCompleto
+
+		public static int SpActualizarCobroCompleto(this PviProyectoFinalDB dataConnection, int? @idCobro, DataTable @serviciosSeleccionados, int? @idUser)
+		{
+			var parameters = new []
+			{
+				new DataParameter("@id_cobro",               @idCobro,                LinqToDB.DataType.Int32),
+				new DataParameter("@serviciosSeleccionados", @serviciosSeleccionados, LinqToDB.DataType.Structured)
+				{
+					DbType = "[dbo].[ServicioList]"
+				},
+				new DataParameter("@id_user",                @idUser,                 LinqToDB.DataType.Int32)
+			};
+
+			return dataConnection.ExecuteProc("[dbo].[sp_ActualizarCobroCompleto]", parameters);
+		}
+
+		#endregion
+
 		#region SpActualizarServicio
 
 		public static int SpActualizarServicio(this PviProyectoFinalDB dataConnection, int? @IdServicio, string @Nombre, string @Descripcion, decimal? @Precio, int? @IdCategoria)
@@ -547,6 +566,27 @@ namespace DataModels
 		{
 			public string Nombre   { get; set; }
 			public int    Incluido { get; set; }
+		}
+
+		#endregion
+
+		#region SpConsultarServiciosPorCobroId
+
+		public static IEnumerable<SpConsultarServiciosPorCobroIdResult> SpConsultarServiciosPorCobroId(this PviProyectoFinalDB dataConnection, int? @IdCobro)
+		{
+			var parameters = new []
+			{
+				new DataParameter("@IdCobro", @IdCobro, LinqToDB.DataType.Int32)
+			};
+
+			return dataConnection.QueryProc<SpConsultarServiciosPorCobroIdResult>("[dbo].[SpConsultarServiciosPorCobroId]", parameters);
+		}
+
+		public partial class SpConsultarServiciosPorCobroIdResult
+		{
+			public int    IdServicio { get; set; }
+			public string Nombre     { get; set; }
+			public int    Incluido   { get; set; }
 		}
 
 		#endregion

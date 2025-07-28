@@ -25,4 +25,25 @@ namespace ProyectoFinalPogragamacionVI.Models
         public string Detalle { get; set; }
         public string RealizadoPor { get; set; }
     }
+
+    public class EditarServiciosCobroViewModel
+    {
+        public int IdCobro { get; set; }
+
+        public string NombreCasa { get; set; }
+        public string NombreCliente { get; set; }
+        public int Mes { get; set; }
+        public int Año { get; set; }
+        public decimal Monto { get; set; }
+
+        public List<ServicioEditarViewModel> Servicios { get; set; }
+    }
+
+    public class ServicioEditarViewModel
+    {
+        public int IdServicio { get; set; }
+        public string Nombre { get; set; }
+        public bool Seleccionado { get; set; }
+    }
+
 }

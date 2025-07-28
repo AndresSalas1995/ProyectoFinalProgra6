@@ -55,5 +55,77 @@ namespace ProyectoFinalPogragamacionVI.Controllers
                 return View(viewModel);
             }
         }
+
+        [HttpGet]
+        public ActionResult Editar(int? id)
+        {
+            using (var db = new PviProyectoFinalDB("MyDatabase"))
+            {
+                var detalle = db.SpConsultarDetalleCobro(id).FirstOrDefault();
+                if (detalle == null)
+                    return HttpNotFound();
+
+                var serviciosDb = db.SpConsultarServiciosPorCobroId(id).ToList();
+                var serviciosActivos = db.Servicios.Where(s => s.Estado == true).ToList();
+
+                var model = new EditarServiciosCobroViewModel
+                {
+                    IdCobro = detalle.Id_cobro,
+                    NombreCasa = detalle.Nombre_casa,
+                    NombreCliente = detalle.Nombre_cliente,
+                    Mes = detalle.Mes,
+                    Año = detalle.Año,
+                    Monto = detalle.Monto,
+                    Servicios = serviciosActivos.Select(s => new ServicioEditarViewModel
+                    {
+                        IdServicio = s.IdServicio,
+                        Nombre = s.Nombre,
+                        Seleccionado = serviciosDb.Any(serv => serv.IdServicio == s.IdServicio && serv.Incluido == 1)
+                    }).ToList()
+                };
+
+                return View(model);
+            }
+        }
+
+        [HttpPost]
+        public ActionResult Editar(EditarServiciosCobroViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                // En caso de error, recargar servicios activos para volver a mostrar
+                using (var db = new PviProyectoFinalDB("MyDatabase"))
+                {
+                    var serviciosActivos = db.Servicios.Where(s => s.Estado == true).ToList();
+                    model.Servicios = serviciosActivos.Select(s => new ServicioEditarViewModel
+                    {
+                        IdServicio = s.IdServicio,
+                        Nombre = s.Nombre,
+                        Seleccionado = model.Servicios?.FirstOrDefault(x => x.IdServicio == s.IdServicio)?.Seleccionado ?? false
+                    }).ToList();
+                }
+
+                return View(model);
+            }
+
+            using (var db = new PviProyectoFinalDB("MyDatabase"))
+            {
+                // Crear DataTable con servicios seleccionados para pasar al procedimiento almacenado
+                var serviciosTable = new System.Data.DataTable();
+                serviciosTable.Columns.Add("id_servicio", typeof(int));
+
+                foreach (var servicio in model.Servicios.Where(s => s.Seleccionado))
+                {
+                    serviciosTable.Rows.Add(servicio.IdServicio);
+                }
+
+                // Llamar al procedimiento almacenado para actualizar servicios del cobro
+                db.SpActualizarCobroCompleto(model.IdCobro, serviciosTable, idUser: Convert.ToInt32(Session["id_persona"]));
+            }
+
+            return RedirectToAction("Detalle", new { id = model.IdCobro });
+        }
+
+
     }
 }
