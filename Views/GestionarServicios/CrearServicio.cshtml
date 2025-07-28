@@ -1,17 +1,30 @@
 ﻿@model ProyectoFinalPogragamacionVI.Models.Servicios
 
 @{
-    ViewBag.Title = "Crear Servicios";
+    var esEdicion = ViewBag.EsConsulta == true;
+    ViewBag.Title = esEdicion ? "Editar Servicio" : "Crear Servicio";
 }
 
 <h2>@ViewBag.Title</h2>
 
-<form method="post" id="myform" class="form">
+<form method="post" id="myform" class="form" action="@Url.Action(esEdicion ? "EditarServicio" : "CrearServicio", "GestionarServicios")">
     @Html.HiddenFor(_ => _.Id)
+    @*Intentar luego ponerle un hiddenfor para que sea vea igual gris*@
+    @{
+        var nombreAtributo = new Dictionary<string, object>
+    {
+        { "placeholder", "Nombre" },
+        { "class", "form-control" }
+    };
 
+        if (esEdicion)
+        {
+            nombreAtributo["readonly"] = "readonly";
+        }
+    }
     <div class="mb-3">
         <label for="Nombre" class="form-label">Nombre:</label>
-        @Html.TextBoxFor(_ => _.nombre, new { placeholder = "Nombre", @class = "form-control" })
+        @Html.TextBoxFor(_ => _.nombre, nombreAtributo)
     </div>
     <div class="mb-3">
         <label for="Descripcion" class="form-label">Descripcion:</label>
@@ -23,17 +36,24 @@
             Model.precio.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture),
             new { @class = "form-control", type = "number", step = "0.01", min = "0.01" })
     </div>
-
     <div class="mb-3">
         <label for="categoriaId" class="form-label">Categoria:</label>
-        <select id="categoriaId" name="categoriaId" class="form-control">
-            <option value="">Seleccione una opcion</option>
+        <select id="categoriaId" name="categoriaId" class="form-control" @(esEdicion ? "disabled" : "")>
+            <option value="">Seleccione una opción</option>
         </select>
+        @* Campo oculto para que el valor de categoriaId se envíe aunque el select esté deshabilitado *@
+        @if (esEdicion)
+        {
+            @Html.HiddenFor(_ => _.categoriaId)
+        }
     </div>
-    <input type="submit" class="btn btn-primary" value="Guardar" />
-    <a href="~/GestionarServicios/Index" class="btn btn-dark">Regresar</a>
+    <div>
+        <input type="submit" class="btn btn-primary" value="@((esEdicion) ? "Guardar Cambios" : "Crear Servicio")" />
+        <a href="~/GestionarServicios/Index" class="btn btn-dark">Regresar</a>
+    </div>
 </form>
-@if (ViewBag.EsConsulta == true)
+@* Botón de inactivar solo en modo edición *@
+@if (esEdicion)
 {
     using (Html.BeginForm("InactivarServicio", "GestionarServicios", FormMethod.Post))
     {
@@ -42,14 +62,13 @@
     }
 }
 <br />
-@if (this.Model != null && ViewBag.mensaje != null)
+@if (ViewBag.mensaje != null)
 {
-    <div class="alert alert-success" role="alert">
+    <br />
+    <div class="alert alert-info" role="alert">
         @ViewBag.mensaje
     </div>
 }
-
-
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
@@ -59,7 +78,8 @@
             rules: {
                 'nombre': { required: true, maxlength: 250 },
                 'descripcion': { required: true, maxlength: 250 },
-                'precio': { required: true, number: true, min: 0.01 }
+                'precio': { required: true, number: true, min: 0.01 },
+                'categoriaId': { required: true }
             },
             messages: {
                 'nombre': {
@@ -74,6 +94,9 @@
                     required: "El precio es obligatorio",
                     number: "Debe ser un número valido",
                     min: "El precio debe ser mayor o igual a 0"
+                },
+                'categoriaId': {
+                    required: "Debe seleccionar una categoría"
                 }
             }
         });

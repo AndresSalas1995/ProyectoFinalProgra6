@@ -27,51 +27,93 @@ namespace ProyectoFinalPogragamacionVI.Models
             return View(lista);
         }
 
-        //Crear Servicio
-        public ActionResult CrearServicio(int? id)
+        // GET: CrearServicio
+        public ActionResult CrearServicio()
         {
-            Servicios servicio = new Servicios();
+            ViewBag.EsConsulta = false;
+            return View(new Servicios());
+        }
+
+        // POST: CrearServicio
+        [HttpPost]
+        public ActionResult CrearServicio(Servicios servicio)
+        {
+            string mensaje = "";
 
             try
             {
-                if (id.HasValue)
+                using (var db = new PviProyectoFinalDB("MyDatabase"))
                 {
-                    using (var db = new PviProyectoFinalDB("MyDatabase"))
-                    {
-
-                        var resultado = db.SpLeerServicioPorId(id).FirstOrDefault();
-
-                        // Verificar si el servicio esta inactivo
-                        if ( resultado.Estado == false)
-                        {
-                            return RedirectToAction("ServicioInactivo", new { id = id });
-                        }
-
-                        servicio = new Servicios
-                        {
-                            Id = resultado.Id_servicio,
-                            nombre = resultado.Nombre,
-                            descripcion = resultado.Descripcion,
-                            precio = resultado.Precio,
-                            categoria = resultado.Nombre_categoria,
-                            categoriaId = resultado.Id_categoria,
-                        };
-                    }
-                    ViewBag.EsConsulta = true; //No muestra si es consulta o no
-                }
-                else
-                {
-                    ViewBag.EsConsulta = false; //Nuevo servicio
+                    bool estado = true;
+                    db.SpAgregarServicio(servicio.nombre, servicio.descripcion, servicio.precio, servicio.categoriaId, estado);
+                    mensaje = "Servicio creado correctamente";
                 }
             }
-                
             catch (Exception ex)
             {
-                // Manejo de excepciones
-                ModelState.AddModelError("", "Ocurrió un error al crear el servicio: " + ex.Message);
+                mensaje = "Error al crear el servicio: " + ex.Message;
+                ModelState.AddModelError("", mensaje);
             }
 
+            ViewBag.mensaje = mensaje;
+            ViewBag.EsConsulta = false;
             return View(servicio);
+        }
+
+
+        // GET: EditarServicio
+        public ActionResult EditarServicio(int? id)
+        {
+            Servicios servicio = new Servicios();
+
+            using (var db = new PviProyectoFinalDB("MyDatabase"))
+            {
+                var resultado = db.SpLeerServicioPorId(id).FirstOrDefault();
+
+                if (resultado == null)
+                    return HttpNotFound();
+
+                if (resultado.Estado == false)
+                    return RedirectToAction("ServicioInactivo", new { id });
+
+                servicio = new Servicios
+                {
+                    Id = resultado.Id_servicio,
+                    nombre = resultado.Nombre,
+                    descripcion = resultado.Descripcion,
+                    precio = resultado.Precio,
+                    categoria = resultado.Nombre_categoria,
+                    categoriaId = resultado.Id_categoria,
+                };
+            }
+
+            ViewBag.EsConsulta = true;
+            return View("CrearServicio", servicio); // reutilizo la misma vista
+        }
+
+        // POST: EditarServicio
+        [HttpPost]
+        public ActionResult EditarServicio(Servicios servicio)
+        {
+            string mensaje = "";
+
+            try
+            {
+                using (var db = new PviProyectoFinalDB("MyDatabase"))
+                {
+                    db.SpActualizarServicio(servicio.Id, servicio.nombre, servicio.descripcion, servicio.precio, servicio.categoriaId);
+                    mensaje = "Servicio actualizado correctamente";
+                }
+            }
+            catch (Exception ex)
+            {
+                mensaje = "Error al actualizar el servicio: " + ex.Message;
+                ModelState.AddModelError("", mensaje);
+            }
+
+            ViewBag.mensaje = mensaje;
+            ViewBag.EsConsulta = true;
+            return View("CrearServicio", servicio); // reutilizas la misma vista
         }
 
         //Para crear la vista de servicio inactivo
@@ -79,40 +121,6 @@ namespace ProyectoFinalPogragamacionVI.Models
         {
             ViewBag.IdServicio = id;
             return View();
-        }
-
-        [HttpPost]
-        public ActionResult CrearServicio(Servicios servicio)
-        {
-            string mensaje = "";
-                try
-                {
-                using (var db = new PviProyectoFinalDB("MyDatabase"))
-                {
-                    var existe = db.SpLeerServicioPorId(servicio.Id).FirstOrDefault();
-
-                    if (existe != null)
-                    {
-                        mensaje = "Este Servicio ya existe";
-                        ModelState.AddModelError("", mensaje);
-                        ViewBag.EsConsulta = true;
-                    }
-                    else
-                    {
-                        bool estado = true;
-                        db.SpAgregarServicio(servicio.nombre, servicio.descripcion, servicio.precio, servicio.categoriaId, estado);
-                        mensaje = "Se ha insertado correctamente el servicio";
-                        ViewBag.EsConsulta = false;
-                    }
-                }
-            }
-                catch (Exception ex)
-                {
-                    mensaje = "No se ha insertado correctamente el servicio";
-                }
-            ViewBag.mensaje = mensaje;
-            return View(servicio);
-
         }
 
         //Accion para inactivar un servicio

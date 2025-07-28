@@ -32,7 +32,7 @@
                 <td>@item.Nombre_categoria</td>
                 <td>@item.Estado</td>
                 <td>
-                    @Html.ActionLink("Consultar", "CrearServicio", "GestionarServicios", new { id = item.Id_servicio }, new { @class = "btn btn-info btn-sm" })
+                    @Html.ActionLink("Consultar", "EditarServicio", "GestionarServicios", new { id = item.Id_servicio }, new { @class = "btn btn-info btn-sm" })
                 </td>
             </tr>
         }

@@ -283,6 +283,30 @@ namespace DataModels
 
 	public static partial class PviProyectoFinalDBStoredProcedures
 	{
+		#region SpActualizarServicio
+
+		public static int SpActualizarServicio(this PviProyectoFinalDB dataConnection, int? @IdServicio, string @Nombre, string @Descripcion, decimal? @Precio, int? @IdCategoria)
+		{
+			var parameters = new []
+			{
+				new DataParameter("@IdServicio",  @IdServicio,  LinqToDB.DataType.Int32),
+				new DataParameter("@Nombre",      @Nombre,      LinqToDB.DataType.VarChar)
+				{
+					Size = 100
+				},
+				new DataParameter("@Descripcion", @Descripcion, LinqToDB.DataType.Text)
+				{
+					Size = 2147483647
+				},
+				new DataParameter("@Precio",      @Precio,      LinqToDB.DataType.Decimal),
+				new DataParameter("@IdCategoria", @IdCategoria, LinqToDB.DataType.Int32)
+			};
+
+			return dataConnection.ExecuteProc("[dbo].[SpActualizarServicio]", parameters);
+		}
+
+		#endregion
+
 		#region SpAgregarServicio
 
 		public static int SpAgregarServicio(this PviProyectoFinalDB dataConnection, string @Nombre, string @Descripcion, decimal? @Precio, int? @IdCategoria, bool? @Estado)
