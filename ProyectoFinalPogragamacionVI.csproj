@@ -374,6 +374,7 @@
     <Content Include="Views\GestionarCasas\CasaInactivoExitosamente.cshtml" />
     <Content Include="Views\Cobros\Editar.cshtml" />
     <Content Include="Views\Cobros\PagoExitoso.cshtml" />
+    <Content Include="Views\Cobros\PagoEliminadoExitoso.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -67,8 +67,10 @@
             @Html.Hidden("id", Model.Detalle.Id_cobro)
             <button type="submit" class="btn btn-success">Pagar</button>
         }
-
-        <a href="@Url.Action("Eliminar", "Cobros", new { id = Model.Detalle.Id_cobro })" class="btn btn-danger" onclick="return confirm('¿Está seguro de eliminar este cobro?');">Eliminar</a>
+        using (Html.BeginForm("Eliminar", "Cobros", new { id = Model.Detalle.Id_cobro }, FormMethod.Post))
+        {
+            <button type="submit" class="btn btn-danger" onclick="return confirm('¿Está seguro de eliminar este cobro?');">Eliminar</button>
+        }
     }
 </div>
 

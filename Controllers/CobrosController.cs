@@ -4,9 +4,11 @@ using System.Linq;
 using System.Web.Mvc;
 using DataModels;
 using ProyectoFinalPogragamacionVI.Models;
+using ProyectoFinalPogragamacionVI.Permisos;
 
 namespace ProyectoFinalPogragamacionVI.Controllers
 {
+
     public class CobrosController : Controller
     {
         // GET: Cobros
@@ -209,6 +211,59 @@ namespace ProyectoFinalPogragamacionVI.Controllers
 
         //Para crear la vista pago exitoso
         public ActionResult PagoExitoso(int? id)
+        {
+            ViewBag.Id_Cobro = id;
+            return View();
+        }
+
+        //Metodo para eliminar un cobro
+        [HttpPost]
+        public ActionResult Eliminar(int id)
+        {
+            using (var db = new PviProyectoFinalDB("MyDatabase"))
+            {
+                var detalle = db.SpConsultarDetalleCobro(id).FirstOrDefault();
+                if (detalle == null)
+                {
+                    TempData["Mensaje"] = "Cobro no encontrado.";
+                    return RedirectToAction("Index", "Empleado");
+                }
+
+                // Validar estado pagado o eliminado
+                if (detalle.Estado.Equals("Pagado", StringComparison.OrdinalIgnoreCase) ||
+                    detalle.Estado.Equals("Eliminado", StringComparison.OrdinalIgnoreCase))
+                {
+                    TempData["Mensaje"] = "No se puede eliminar un cobro pagado o ya eliminado.";
+                    return RedirectToAction("Index", "Empleado");
+                }
+
+                // Validar que el cobro NO pertenezca al usuario empleado logeado
+                int IdUsuario = Convert.ToInt32(Session["id_persona"]);
+                if (detalle.Id_persona == IdUsuario && Convert.ToInt32(Session["es_empleado"]) == 1)
+                {
+                    TempData["Mensaje"] = "No puede eliminar un cobro que le pertenece.";
+                    return RedirectToAction("Index", "Empleado");  
+                }
+
+                // Validar que el periodo del cobro sea posterior a la fecha actual
+                var fechaActual = DateTime.Now;
+                if (detalle.Año < fechaActual.Year ||
+                    (detalle.Año == fechaActual.Year && detalle.Mes <= fechaActual.Month))
+                {
+                    TempData["Mensaje"] = "No se puede eliminar un cobro de un periodo anterior o actual.";
+                    return RedirectToAction("Index", "Empleado"); // O a la lista "Consultar Cobros"
+                }
+
+                // Si pasa todas las validaciones, eliminar (cambiar estado)
+                db.SpEliminarCobro(id, IdUsuario);
+            }
+
+            TempData["Mensaje"] = "Cobro eliminado correctamente.";
+            return RedirectToAction("PagoEliminadoExitoso", new { id = id });
+        }
+
+        //vista para mostrar mensaje de pago eliminado exitoso
+        public ActionResult PagoEliminadoExitoso(int? id)
         {
             ViewBag.Id_Cobro = id;
             return View();

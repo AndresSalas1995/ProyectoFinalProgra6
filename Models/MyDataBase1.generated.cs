@@ -632,6 +632,21 @@ namespace DataModels
 
 		#endregion
 
+		#region SpEliminarCobro
+
+		public static int SpEliminarCobro(this PviProyectoFinalDB dataConnection, int? @idCobro, int? @idUsuario)
+		{
+			var parameters = new []
+			{
+				new DataParameter("@id_cobro",   @idCobro,   LinqToDB.DataType.Int32),
+				new DataParameter("@id_usuario", @idUsuario, LinqToDB.DataType.Int32)
+			};
+
+			return dataConnection.ExecuteProc("[dbo].[SpEliminarCobro]", parameters);
+		}
+
+		#endregion
+
 		#region SpFiltrarCobrosEmpleado
 
 		public static IEnumerable<SpFiltrarCobrosEmpleadoResult> SpFiltrarCobrosEmpleado(this PviProyectoFinalDB dataConnection, int? @IdCliente, int? @mes, int? @anno)
