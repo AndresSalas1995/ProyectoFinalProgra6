@@ -946,6 +946,21 @@ namespace DataModels
 
 		#endregion
 
+		#region SpPagarCobro
+
+		public static int SpPagarCobro(this PviProyectoFinalDB dataConnection, int? @idCobro, int? @idUsuario)
+		{
+			var parameters = new []
+			{
+				new DataParameter("@id_cobro",   @idCobro,   LinqToDB.DataType.Int32),
+				new DataParameter("@id_usuario", @idUsuario, LinqToDB.DataType.Int32)
+			};
+
+			return dataConnection.ExecuteProc("[dbo].[SpPagarCobro]", parameters);
+		}
+
+		#endregion
+
 		#region SpRenamediagram
 
 		public static int SpRenamediagram(this PviProyectoFinalDB dataConnection, string @diagramname, int? @ownerId, string @newDiagramname)

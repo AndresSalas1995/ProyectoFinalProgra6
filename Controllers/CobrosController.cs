@@ -69,7 +69,7 @@ namespace ProyectoFinalPogragamacionVI.Controllers
                 if (detalle.Estado.Equals("Pagado", StringComparison.OrdinalIgnoreCase) ||
                     detalle.Estado.Equals("Eliminado", StringComparison.OrdinalIgnoreCase))
                 {
-                    TempData["Mensaje"] = "Este cobro no puede ser modificado porque está pagado o eliminado.";
+                    TempData["Mensaje"] = "Este cobro no puede ser modificado porque ya está pagado o eliminado.";
                     return RedirectToAction("Index", "Empleado");
                 }
 
@@ -143,6 +143,76 @@ namespace ProyectoFinalPogragamacionVI.Controllers
             return RedirectToAction("Detalle", new { id = model.IdCobro });
         }
 
+
+        [HttpPost]
+        public ActionResult Pagar(int id)
+        {
+            try
+            {
+                using (var db = new PviProyectoFinalDB("MyDatabase"))
+                {
+                    // Validar sesión
+                    if (Session["id_persona"] == null)
+                    {
+                        TempData["Mensaje"] = "La sesión ha expirado. Por favor inicie sesión nuevamente.";
+                        return RedirectToAction("Autenticacion", "Index");
+                    }
+
+                    int idUsuario = Convert.ToInt32(Session["id_persona"]);
+                    bool esEmpleado = Session["es_empleado"] != null && Convert.ToInt32(Session["es_empleado"]) == 1;
+
+                    // Obtener detalle del cobro
+                    var detalle = db.SpConsultarDetalleCobro(id).FirstOrDefault();
+                    if (detalle == null)
+                    {
+                        TempData["Mensaje"] = "El cobro no existe.";
+                        return RedirectToAction("Index", "Empleado");
+                    }
+
+                    // Validar estado del cobro
+                    if (detalle.Estado.Equals("Pagado", StringComparison.OrdinalIgnoreCase) ||
+                        detalle.Estado.Equals("Eliminado", StringComparison.OrdinalIgnoreCase))
+                    {
+                        TempData["Mensaje"] = "Este cobro no puede ser pagado porque ya está pagado o eliminado.";
+                        return RedirectToAction("Index", "Empleado");
+                    }
+
+                    // un empleado no puede pagar cobros que le pertenecen
+                    if (esEmpleado && detalle.Id_persona == idUsuario)
+                    {
+                        TempData["Mensaje"] = "Como empleado, no puede pagar un cobro que le pertenece como cliente.";
+                        return RedirectToAction("Index", "Empleado");
+                    }
+
+                    // no se puede pagar un cobro de un periodo anterior o igual al actual
+                    var fechaActual = DateTime.Now;
+                    if (detalle.Año < fechaActual.Year ||
+                        (detalle.Año == fechaActual.Year && detalle.Mes <= fechaActual.Month))
+                    {
+                        TempData["Mensaje"] = "No se puede pagar un cobro de un periodo anterior o actual.";
+                        return RedirectToAction("Index", "Empleado");
+                    }
+
+                    // Ejecutar procedimiento para marcar el cobro como pagado
+                    db.SpPagarCobro(id, idUsuario);
+
+                    TempData["Mensaje"] = "El cobro fue pagado exitosamente.";
+                }
+                return RedirectToAction("PagoExitoso", new { id = id });
+            }
+            catch (Exception ex)
+            {
+                TempData["Mensaje"] = "Error al procesar el pago: " + ex.Message;
+                return RedirectToAction("Index", "Empleado");
+            }
+        }
+
+        //Para crear la vista pago exitoso
+        public ActionResult PagoExitoso(int? id)
+        {
+            ViewBag.Id_Cobro = id;
+            return View();
+        }
 
     }
 }

@@ -1,0 +1,10 @@
+﻿@{
+    ViewBag.Title = "Pago Exitoso";
+}
+
+<div class="alert alert-success">
+    <h4>Pago realizado exitosamente</h4>
+    <p>El pago con ID <strong>@ViewBag.Id_Cobro</strong> ha sido pagado exitosamente.</p>
+</div>
+
+<a href="@Url.Action("Index", "Empleado")" class="btn btn-primary">Regresar</a>
