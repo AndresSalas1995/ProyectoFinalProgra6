@@ -4,100 +4,142 @@
     ViewBag.Title = "Detalle del Cobro";
 }
 
-<h2>Detalle del Cobro</h2>
+<!-- Título -->
+<div class="text-center my-4">
+    <h2 class="fw-bold text-primary">Detalle del Cobro</h2>
+</div>
 
-<table class="table">
-    <tr>
-        <th>ID Cobro</th>
-        <td>@Model.Detalle.Id_cobro</td>
-    </tr>
-    <tr>
-        <th>Nombre de Casa</th>
-        <td>@Model.Detalle.Nombre_casa</td>
-    </tr>
-    <tr>
-        <th>Propietario</th>
-        <td>@Model.Detalle.Nombre_cliente</td>
-    </tr>
-    <tr>
-        <th>Mes</th>
-        <td>@Model.Detalle.Mes</td>
-    </tr>
-    <tr>
-        <th>Año</th>
-        <td>@Model.Detalle.Año</td>
-    </tr>
-    <tr>
-        <th>Estado</th>
-        <td>@Model.Detalle.Estado</td>
-    </tr>
-    <tr>
-        <th>Monto Cobro</th>
-        <td>@Model.Detalle.Monto.ToString("C")</td>
-    </tr>
-</table>
+<!-- Detalles del cobro -->
+<div class="card shadow mb-4">
+    <div class="card-header bg-light fw-bold">
+        Información General
+    </div>
+    <div class="card-body">
+        <table class="table table-bordered table-sm">
+            <tbody>
+                <tr>
+                    <th>ID Cobro</th>
+                    <td>@Model.Detalle.Id_cobro</td>
+                </tr>
+                <tr>
+                    <th>Nombre de Casa</th>
+                    <td>@Model.Detalle.Nombre_casa</td>
+                </tr>
+                <tr>
+                    <th>Propietario</th>
+                    <td>@Model.Detalle.Nombre_cliente</td>
+                </tr>
+                <tr>
+                    <th>Mes</th>
+                    <td>@Model.Detalle.Mes</td>
+                </tr>
+                <tr>
+                    <th>Año</th>
+                    <td>@Model.Detalle.Año</td>
+                </tr>
+                <tr>
+                    <th>Estado</th>
+                    <td>
+                        @if (Model.Detalle.Estado.Equals("Pagado", StringComparison.OrdinalIgnoreCase))
+                        {
+                            <span class="badge bg-success">Pagado</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-warning text-dark">Pendiente</span>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <th>Monto Cobro</th>
+                    <td>@Model.Detalle.Monto.ToString("C")</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
 
-@*Servicios*@
-<h3>Servicios</h3>
-<ul>
-    @foreach (var servicio in Model.Servicios)
-    {
-        <li>
-            <input type="checkbox" disabled="disabled" @(servicio.Incluido ? "checked" : "") />
-            @servicio.Nombre
-        </li>
-    }
-</ul>
+<!-- Servicios incluidos -->
+<div class="card shadow mb-4">
+    <div class="card-header bg-light fw-bold">Servicios Incluidos</div>
+    <div class="card-body">
+        <ul class="list-group list-group-flush">
+            @foreach (var servicio in Model.Servicios)
+            {
+                <li class="list-group-item">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" disabled @(servicio.Incluido ? "checked" : "") />
+                        <label class="form-check-label">@servicio.Nombre</label>
+                    </div>
+                </li>
+            }
+        </ul>
+    </div>
+</div>
 
-@*Botones de acción*@
-@* Mostrar botones solo si el usuario es empleado y el cobro está pendiente *@
-@*El String comparison es para ignorar mayusculas y minusculas*@
-<div class="mb-3 d-flex gap-2">
-    @if (
-        Model.Detalle.Estado.Equals("Pendiente", StringComparison.OrdinalIgnoreCase) &&
-        Session["es_empleado"] != null &&
-        Convert.ToInt32(Session["es_empleado"]) == 1
-    )
-    {
-        <a href="@Url.Action("Editar", "Cobros", new { id = Model.Detalle.Id_cobro })" class="btn btn-primary">Editar</a>
+<!-- Botones de acción (si es empleado y el cobro está pendiente) -->
+@if (
+    Model.Detalle.Estado.Equals("Pendiente", StringComparison.OrdinalIgnoreCase) &&
+    Session["es_empleado"] != null &&
+    Convert.ToInt32(Session["es_empleado"]) == 1
+)
+{
+    <div class="mb-4 d-flex flex-wrap gap-2">
+        <a href="@Url.Action("Editar", "Cobros", new { id = Model.Detalle.Id_cobro })" class="btn btn-primary">
+            <i class="bi bi-pencil-square me-1"></i>Editar
+        </a>
 
-        using (Html.BeginForm("Pagar", "Cobros", FormMethod.Post, new { @class = "d-inline" }))
+        @using (Html.BeginForm("Pagar", "Cobros", FormMethod.Post, new { @class = "d-inline" }))
         {
             @Html.AntiForgeryToken()
             @Html.Hidden("id", Model.Detalle.Id_cobro)
-            <button type="submit" class="btn btn-success">Pagar</button>
+            <button type="submit" class="btn btn-success">
+                <i class="bi bi-cash-coin me-1"></i>Pagar
+            </button>
         }
-        using (Html.BeginForm("Eliminar", "Cobros", new { id = Model.Detalle.Id_cobro }, FormMethod.Post))
+
+        @using (Html.BeginForm("Eliminar", "Cobros", new { id = Model.Detalle.Id_cobro }, FormMethod.Post))
         {
-            <button type="submit" class="btn btn-danger" onclick="return confirm('¿Está seguro de eliminar este cobro?');">Eliminar</button>
+            <button type="submit" class="btn btn-danger" onclick="return confirm('¿Está seguro de eliminar este cobro?');">
+                <i class="bi bi-trash me-1"></i>Eliminar
+            </button>
         }
-    }
+    </div>
+}
+
+<!-- Bitácora de acciones -->
+<div class="card shadow mb-4">
+    <div class="card-header bg-light fw-bold">Bitácora de Acciones</div>
+    <div class="card-body p-0">
+        <table class="table table-bordered table-striped table-hover mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Fecha</th>
+                    <th>Acción</th>
+                    <th>Detalle</th>
+                    <th>Realizado por</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var log in Model.Bitacora)
+                {
+                    <tr>
+                        <td>@log.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td>@log.Accion</td>
+                        <td>@log.Detalle</td>
+                        <td>@log.RealizadoPor</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>
 
+<!-- Botón Regresar -->
+<div class="text-end">
+    <a href="@Url.Action("Index", "Empleado")" class="btn btn-secondary">
+        <i class="bi bi-arrow-left"></i> Regresar
+    </a>
+</div>
 
-@*Bitácora de acciones*@
-<h3>Lista de acciones realizadas</h3>
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>Fecha</th>
-            <th>Acción</th>
-            <th>Detalle</th>
-            <th>Realizado por</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var log in Model.Bitacora)
-        {
-            <tr>
-                <td>@log.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
-                <td>@log.Accion</td>
-                <td>@log.Detalle</td>
-                <td>@log.RealizadoPor</td>
-            </tr>
-        }
-    </tbody>
-</table>
-
-<a href="@Url.Action("Index", "Empleado")" class="btn btn-dark">Regresar</a>
 

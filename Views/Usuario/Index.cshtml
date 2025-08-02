@@ -1,42 +1,50 @@
 ﻿@model List<DataModels.PviProyectoFinalDBStoredProcedures.SpConsultarCobrosUsuarioResult>
 
-
 @{
     ViewBag.Title = "Index";
 }
 
-<h2>Mis Cobros</h2>
-
-<br />
-
-@*Boton agregar un nuevo cobro*@
-
-<div class="mb-3 text-end">
-    @Html.ActionLink("Nuevo Cobro", "Crear", "Usuario", null, new { @class = "btn btn-success" })
+<!-- Encabezado -->
+<div class="text-center my-4">
+    <h2 class="fw-bold text-primary">Mis Cobros</h2>
 </div>
 
+<!-- Botón Nuevo Cobro -->
+<div class="mb-3 text-end">
+    @Html.ActionLink("➕ Nuevo Cobro", "Crear", "Usuario", null, new { @class = "btn btn-success" })
+</div>
 
-<table class="table table-bordered table-striped">
-    <thead>
+<!-- Tabla de cobros -->
+<table class="table table-bordered table-striped table-hover align-middle">
+    <thead class="table-dark">
         <tr>
             <th># Cobro</th>
             <th>Nombre de Casa</th>
             <th>Propietario</th>
             <th>Periodo</th>
             <th>Estado</th>
-            <th>Consultar</th>
+            <th class="text-center">Consultar</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (DataModels.PviProyectoFinalDBStoredProcedures.SpConsultarCobrosUsuarioResult item in this.Model)
+        @foreach (var item in Model)
         {
             <tr>
                 <td>@item.Id_cobro</td>
                 <td>@item.Nombre_casa</td>
                 <td>@item.Nombre_cliente</td>
                 <td>@item.Periodo</td>
-                <td>@item.Estado</td>
                 <td>
+                    @if (item.Estado == "Pagado")
+                    {
+                        <span class="badge bg-success">Pagado</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger">Pendiente</span>
+                    }
+                </td>
+                <td class="text-center">
                     @Html.ActionLink("Consultar", "Detalle", "Cobros", new { id = item.Id_cobro }, new { @class = "btn btn-info btn-sm" })
                 </td>
             </tr>

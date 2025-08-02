@@ -4,63 +4,82 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Gestionar Cobros</h2>
+<!-- Encabezado -->
+<div class="text-center my-4">
+    <h2 class="fw-bold text-primary">Gestión de Cobros</h2>
+</div>
 
-@*imprimo mensajes usando TempData en caso que algunas validaciones no se cumplan, excelente tool*@
+<!-- Mensaje TempData -->
 @if (TempData["Mensaje"] != null)
 {
-    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-        @TempData["Mensaje"]
+    <div class="alert alert-warning alert-dismissible fade show d-flex align-items-center" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        <div>@TempData["Mensaje"]</div>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 }
 
-@*Filtro para empleados*@
-
-<form method="get" class="row g-3 mb-4">
-    <div class="mb-3">
-        <label for="IdCliente" class="form-label"></label>
-        <select id="IdCliente" name="IdCliente" class="form-control">
-            <option value="">Seleccione un cliente</option>
-        </select>
+<!-- Filtros -->
+<div class="card mb-4 shadow-sm">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-4">
+                <label for="IdCliente" class="form-label">Cliente</label>
+                <select id="IdCliente" name="IdCliente" class="form-select">
+                    <option value="">Seleccione un cliente</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label for="mes" class="form-label">Mes</label>
+                <input type="number" name="mes" id="mes" class="form-control" placeholder="Mes" min="1" max="12" value="@Request["mes"]" />
+            </div>
+            <div class="col-md-2">
+                <label for="anno" class="form-label">Año</label>
+                <input type="number" name="anno" id="anno" class="form-control" placeholder="Año" value="@Request["anno"]" />
+            </div>
+            <div class="col-md-2 align-self-end">
+                <button type="submit" class="btn btn-primary w-100">Filtrar</button>
+            </div>
+        </form>
     </div>
-    <div class="col-md-2">
-        <input type="number" name="mes" class="form-control" placeholder="Mes" min="1" max="12" value="@Request["mes"]" />
-    </div>
-    <div class="col-md-2">
-        <input type="number" name="anno" class="form-control" placeholder="Año" value="@Request["anno"]" />
-    </div>
-    <div class="col-md-2">
-        <button type="submit" class="btn btn-primary">Filtrar</button>
-    </div>
-</form>
-
-@*Boton de agregar un nuevo cobro*@
-<div class="mb-3 text-end">
-    @Html.ActionLink("Nuevo Cobro", "Crear", "Empleado", null, new { @class = "btn btn-success" })
 </div>
 
-<table class="table table-bordered table-striped">
-    <thead>
+<!-- Botón nuevo cobro -->
+<div class="mb-3 text-end">
+    @Html.ActionLink("➕ Nuevo Cobro", "Crear", "Empleado", null, new { @class = "btn btn-success" })
+</div>
+
+<!-- Tabla -->
+<table class="table table-bordered table-striped table-hover align-middle">
+    <thead class="table-dark">
         <tr>
             <th># Cobro</th>
             <th>Nombre de Casa</th>
             <th>Propietario</th>
             <th>Periodo</th>
             <th>Estado</th>
-            <th>Consultar</th>
+            <th class="text-center">Consultar</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (DataModels.PviProyectoFinalDBStoredProcedures.SpConsultarCobroResult item in this.Model)
+        @foreach (var item in Model)
         {
             <tr>
                 <td>@item.Id_cobro</td>
                 <td>@item.Nombre_casa</td>
                 <td>@item.Nombre_cliente</td>
                 <td>@item.Periodo</td>
-                <td>@item.Estado</td>
                 <td>
+                    @if (item.Estado == "Pagado")
+                    {
+                        <span class="badge bg-success">Pagado</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger">Pendiente</span>
+                    }
+                </td>
+                <td class="text-center">
                     @Html.ActionLink("Consultar", "Detalle", "Cobros", new { id = item.Id_cobro }, new { @class = "btn btn-info btn-sm" })
                 </td>
             </tr>
@@ -68,9 +87,9 @@
     </tbody>
 </table>
 
+<!-- Script para dropdown -->
 @section Scripts {
     <script type="text/javascript">
-
         function loadDropdown(url, parametros, ddl, selected) {
             $.get(url, parametros, function (data) {
                 ddl.empty();
@@ -84,9 +103,9 @@
                 });
             });
         }
+
         $(document).ready(function () {
             loadDropdown('/Empleado/ObtenerClientesActivos', {}, $('#IdCliente'), '@Request["IdCliente"]');
         });
-
     </script>
 }
