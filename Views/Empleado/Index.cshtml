@@ -70,13 +70,17 @@
                 <td>@item.Nombre_cliente</td>
                 <td>@item.Periodo</td>
                 <td>
-                    @if (item.Estado == "Pagado")
+                    @if (item.Estado.Equals("Pagado", StringComparison.OrdinalIgnoreCase))
                     {
                         <span class="badge bg-success">Pagado</span>
                     }
-                    else
+                    else if (item.Estado.Equals("Pendiente", StringComparison.OrdinalIgnoreCase))
                     {
-                        <span class="badge bg-danger">Pendiente</span>
+                        <span class="badge bg-warning text-dark">Pendiente</span>
+                    }
+                    else if (item.Estado.Equals("Eliminado", StringComparison.OrdinalIgnoreCase))
+                    {
+                        <span class="badge bg-danger">Eliminado</span>
                     }
                 </td>
                 <td class="text-center">

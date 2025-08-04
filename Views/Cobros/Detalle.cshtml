@@ -4,12 +4,12 @@
     ViewBag.Title = "Detalle del Cobro";
 }
 
-<!-- Título -->
+@* Titulo *@
 <div class="text-center my-4">
     <h2 class="fw-bold text-primary">Detalle del Cobro</h2>
 </div>
 
-<!-- Detalles del cobro -->
+@* Detalle cel cobro *@
 <div class="card shadow mb-4">
     <div class="card-header bg-light fw-bold">
         Información General
@@ -44,9 +44,13 @@
                         {
                             <span class="badge bg-success">Pagado</span>
                         }
-                        else
+                        else if (Model.Detalle.Estado.Equals("Pendiente", StringComparison.OrdinalIgnoreCase))
                         {
                             <span class="badge bg-warning text-dark">Pendiente</span>
+                        }
+                        else if (Model.Detalle.Estado.Equals("Eliminado", StringComparison.OrdinalIgnoreCase))
+                        {
+                            <span class="badge bg-danger">Eliminado</span>
                         }
                     </td>
                 </tr>
@@ -59,7 +63,7 @@
     </div>
 </div>
 
-<!-- Servicios incluidos -->
+@* Servicios que estan incluidos *@
 <div class="card shadow mb-4">
     <div class="card-header bg-light fw-bold">Servicios Incluidos</div>
     <div class="card-body">
@@ -77,7 +81,7 @@
     </div>
 </div>
 
-<!-- Botones de acción (si es empleado y el cobro está pendiente) -->
+@*Botones de acción (si es empleado y el cobro está pendiente)*@
 @if (
     Model.Detalle.Estado.Equals("Pendiente", StringComparison.OrdinalIgnoreCase) &&
     Session["es_empleado"] != null &&
@@ -107,7 +111,7 @@
     </div>
 }
 
-<!-- Bitácora de acciones -->
+ @*Bitácora de acciones*@ 
 <div class="card shadow mb-4">
     <div class="card-header bg-light fw-bold">Bitácora de Acciones</div>
     <div class="card-body p-0">
@@ -135,7 +139,7 @@
     </div>
 </div>
 
-<!-- Botón Regresar -->
+@*Boton regresas*@
 <div class="text-end">
     <a href="@Url.Action("Index", "Empleado")" class="btn btn-secondary">
         <i class="bi bi-arrow-left"></i> Regresar
